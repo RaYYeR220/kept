@@ -1,0 +1,22 @@
+{
+  "name": "kept",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "eval": "pnpm --filter @kept/eval run eval",
+    "dev": "pnpm --filter @kept/web dev",
+    "build": "pnpm --filter @kept/web build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
