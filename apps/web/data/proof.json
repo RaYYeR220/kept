@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-30T08:16:09.224Z",
+ "generatedAt": "2026-10-30T10:27:34.701Z",
  "runs": [
   {
    "tag": "blind-v3-router+classifier-misconfigured",
@@ -251,5 +251,76 @@
    "best": 11.4
   }
  },
- "audit": null
+ "audit": {
+  "file": "data/audit-2026-10-30.json",
+  "date": "2026-10-30",
+  "groups": [
+   {
+    "name": "natural black",
+    "searched": 10,
+    "measured": 6,
+    "meanHex": "#4b403c",
+    "meanL": 28.2,
+    "maxPairDeltaE": 62.2
+   },
+   {
+    "name": "jet black",
+    "searched": 10,
+    "measured": 5,
+    "meanHex": "#2f2828",
+    "meanL": 16.8,
+    "maxPairDeltaE": 20.6
+   },
+   {
+    "name": "dark brown",
+    "searched": 10,
+    "measured": 4,
+    "meanHex": "#60463e",
+    "meanL": 32.1,
+    "maxPairDeltaE": 38.8
+   },
+   {
+    "name": "medium brown",
+    "searched": 10,
+    "measured": 1,
+    "meanHex": "#ce9d7d",
+    "meanL": 68.5,
+    "maxPairDeltaE": 0
+   },
+   {
+    "name": "chocolate brown",
+    "searched": 10,
+    "measured": 8,
+    "meanHex": "#956855",
+    "meanL": 48.3,
+    "maxPairDeltaE": 36.3
+   },
+   {
+    "name": "light brown",
+    "searched": 10,
+    "measured": 4,
+    "meanHex": "#5d4230",
+    "meanL": 30.4,
+    "maxPairDeltaE": 35
+   },
+   {
+    "name": "auburn",
+    "searched": 10,
+    "measured": 3,
+    "meanHex": "#5f2920",
+    "meanL": 24.1,
+    "maxPairDeltaE": 6.2
+   },
+   {
+    "name": "honey blonde",
+    "searched": 10,
+    "measured": 6,
+    "meanHex": "#9a755c",
+    "meanL": 52.2,
+    "maxPairDeltaE": 50.5
+   }
+  ],
+  "crossed": 24,
+  "measured": 37
+ }
 }

@@ -33,7 +33,7 @@ Every public statement about Kept, tagged by how it can be checked.
 |---|---|---|
 | Listings come live from Shopify Catalog via Shop MCP; Kept prepares a UCP checkout and never pays | REPRODUCIBLE | `packages/shop`, `/api/checkout` |
 | Listing photos are read the same way as the person's photo and ranked by CIEDE2000 | REPRODUCIBLE | `/api/wigs/measure`, `packages/likeness/src/rank.ts` |
-| Colour-name audit result | REPRODUCIBLE | `data/audit-*.json`, `pnpm --filter @kept/audit audit` |
+| 24 of 37 measured listings sat closer to another colour name's average shade than to their own; "light brown" read about as dark as "dark brown" | REPRODUCIBLE | `data/audit-*.json`, `pnpm --filter @kept/audit audit` |
 | Colour bands (≤ 5 close, ≤ 10 near) | MODELED | `packages/likeness/src/thresholds.ts` |
 
 ## Safety

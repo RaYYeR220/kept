@@ -1,0 +1,634 @@
+{
+ "date": "2026-10-30",
+ "method": "Shop Catalog search per colour name (first 10 listings). A listing counts for a name only if the name is in its own colour option or title. Hair shade read from the first listing photo; face located by YouCam pre-process (0 units).",
+ "groups": [
+  {
+   "name": "natural black",
+   "searched": 10,
+   "measured": 6,
+   "meanHex": "#4b403c",
+   "meanL": 28.2,
+   "maxPairDeltaE": 62.2
+  },
+  {
+   "name": "jet black",
+   "searched": 10,
+   "measured": 5,
+   "meanHex": "#2f2828",
+   "meanL": 16.8,
+   "maxPairDeltaE": 20.6
+  },
+  {
+   "name": "dark brown",
+   "searched": 10,
+   "measured": 4,
+   "meanHex": "#60463e",
+   "meanL": 32.1,
+   "maxPairDeltaE": 38.8
+  },
+  {
+   "name": "medium brown",
+   "searched": 10,
+   "measured": 1,
+   "meanHex": "#ce9d7d",
+   "meanL": 68.5,
+   "maxPairDeltaE": 0
+  },
+  {
+   "name": "chocolate brown",
+   "searched": 10,
+   "measured": 8,
+   "meanHex": "#956855",
+   "meanL": 48.3,
+   "maxPairDeltaE": 36.3
+  },
+  {
+   "name": "light brown",
+   "searched": 10,
+   "measured": 4,
+   "meanHex": "#5d4230",
+   "meanL": 30.4,
+   "maxPairDeltaE": 35
+  },
+  {
+   "name": "auburn",
+   "searched": 10,
+   "measured": 3,
+   "meanHex": "#5f2920",
+   "meanL": 24.1,
+   "maxPairDeltaE": 6.2
+  },
+  {
+   "name": "honey blonde",
+   "searched": 10,
+   "measured": 6,
+   "meanHex": "#9a755c",
+   "meanL": 52.2,
+   "maxPairDeltaE": 50.5
+  }
+ ],
+ "crossed": 24,
+ "measured": 37,
+ "rows": [
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/6jxuSiFJQOLwVDiXlZoOXJ",
+   "title": "Natural Black Body Wave No Lace Glueless Long Headband Wig 100% Human Hair",
+   "listedColour": "natural black",
+   "hex": "#2a292f"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/sEmlsmgeNa7nCil6Ju2JX",
+   "title": "Natural Black Jerry Curly No Lace Glueless Free Part Long Headband Wig 100% Human Hair (Ge",
+   "listedColour": "natural black",
+   "hex": null
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/5WiBDnGVUTl15MPbT5t3cU",
+   "title": "Trendy Short Cut Curly Minimalist HD Lace Glueless Side Part Wig 100% Human Hair Pre-Cut L",
+   "listedColour": "Natural Black",
+   "hex": "#4b4243"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/5IbolCOk5BaIIKgrULwiQQ",
+   "title": "Megalook 13x4 Lace Frontal Body Wave 30 Inch Wig invisible knots Natural Black Natural Hai",
+   "listedColour": "natural black",
+   "hex": null
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/6eTgHRBaQeIsuTK4VN2OqZ",
+   "title": "Megalook 13x6 Three-Go™ Glueless Wig Straight With Drawstring Natural Black 100% Human Hai",
+   "listedColour": "natural black",
+   "hex": "#dba98a"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/4rlFWg66uj38tJD7V0w9jB",
+   "title": "CurlyMe Pre-Bleached 7x5 HD Lace Wear Go Glueless Wigs Very Convenient Pre-Cut Lace Wig",
+   "listedColour": null,
+   "hex": "#2d2d3a"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/2B6BWxbZHLCElUi2Du7sMZ",
+   "title": "Natural Black / Brown Highlight Water Wave Pixie Cut Glueless Minimalist HD Lace Short Cur",
+   "listedColour": "Natural Black",
+   "hex": "#0f0d0e"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/3KKqxwxufzx0owdZu9cIVU",
+   "title": "Megalook 13x6 Three-Go™ Glueless Body Wave Wig With Drawstring Natural Black 100% Human Ha",
+   "listedColour": "natural black",
+   "hex": "#484848"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/1tH4Fpw0WC3gNgALfLFQ4I",
+   "title": "NatureMAX™ 200% Density Ombre Brown / Natural Black Loose Wave Glueless 13x6 / 13x4 HD Lac",
+   "listedColour": "Natural Black",
+   "hex": "#2d2620"
+  },
+  {
+   "name": "natural black",
+   "listingId": "gid://shopify/p/28V9SQ8U5Vu33odiybAPsx",
+   "title": "Lagos Hairline Over-Plucked M-Shaped Hairline Natural Looking Silky Straight Human Hair 13",
+   "listedColour": null,
+   "hex": "#49484c"
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/6gajAjWWLLXWkEkt4oOzxo",
+   "title": "Jet Black Loose Body Wave Glueless 5x5 Closure Lace Wig 100% Human Hair",
+   "listedColour": "jet black",
+   "hex": "#575253"
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/1bkISLn9ubwKWCoSs9yyaM",
+   "title": "Affordable #1 Jet Black Body Wave Wig 13x6 Lace Front Human Hair Wigs Sterly Hair",
+   "listedColour": "#1 Jet Black",
+   "hex": "#141313"
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/5JEIU3akZsbMMRtUNyBB73",
+   "title": "#1 Jet Black Layered Cut Body Wave Wear & Go Glueless 7x6/13x6 FULL Frontal Lace Human Hai",
+   "listedColour": "jet black",
+   "hex": null
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/5CBY6YTjN4uPnIxceMhU2v",
+   "title": "#1 Jet Black @bigekane & @ thequeenleora Recommend 16\"-34\" 13x6 FULL Lace Frontal Wig 100%",
+   "listedColour": "#1 Jet Black",
+   "hex": null
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/6yJYIUoT4x6lsLXsh1XZK9",
+   "title": "Glueless #1 Jet Black Closure Wig 16\"-34\" Inches Human Hair Wigs",
+   "listedColour": "jet black",
+   "hex": null
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/6WaQacj47jVInuhxlaO6o1",
+   "title": "Affordable #1 Jet Black Straight Hair Wig 13x6 Lace Front Human Hair Wigs Sterly Hair",
+   "listedColour": "#1 Jet Black",
+   "hex": null
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/4IUT3LcHZ5XMBj9GaJIlWY",
+   "title": "#1 Jet Black Layered Cut Salon Styled 13x6 Lace Frontal Human Hair Wigs Sterly Hair",
+   "listedColour": "jet black",
+   "hex": "#45302a"
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/4BPPjKyge8fEDfMRBVFDwZ",
+   "title": "#1 Jet Black Deep Wave Wig Sterly 13×6 Full Lace Frontal Human Hair Wigs",
+   "listedColour": "jet black",
+   "hex": "#1e181a"
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/1yQbgKwzX09bpPKKkBev5n",
+   "title": "NAOMI",
+   "listedColour": null,
+   "hex": null
+  },
+  {
+   "name": "jet black",
+   "listingId": "gid://shopify/p/1VNMoRTXydAHRV1zyr27AE",
+   "title": "Jet Black Body Wave 13x4 HD Lace Front Wig",
+   "listedColour": "jet black",
+   "hex": "#1e1e23"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/5V7NzFvxsXv2Z1NXsoHkBC",
+   "title": "#4 Chocolate Brown 13x4 HD Lace Front Wigs Human Hair Wigs For Women Pre Plucked 220% Dens",
+   "listedColour": "#4 Chocolate Brown",
+   "hex": "#915c3c"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/6fXISSzhRK4d3Um8T7m7sc",
+   "title": "Full 300% Density Layered Cut Dark Brown Body Wave Wear Go Wig 13x4 Lace Front Glueless Co",
+   "listedColour": "dark brown",
+   "hex": "#381c11"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/24maqeJEB3hwB6FKYozrux",
+   "title": "VARIAHAIR Glueless Dark Espresso Brown With Warm Caramel Balayage Loose Curly Bob 13×4 Lac",
+   "listedColour": "brown",
+   "hex": "#1b1718"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/1tH4Fpw0WC3gNgALfLFQ4I",
+   "title": "NatureMAX™ 200% Density Ombre Brown / Natural Black Loose Wave Glueless 13x6 / 13x4 HD Lac",
+   "listedColour": "Ombre Brown",
+   "hex": "#302720"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/4u6AEoQ96azxX4Iop4Er2w",
+   "title": "VARIAHAIR Dark Chocolate Brown Glueless Short Wavy Bob 5x5 Lace Closure Human Hair Wig",
+   "listedColour": "chocolate brown",
+   "hex": null
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/3YD4JNKeu2WMRGwOhNJ6AO",
+   "title": "#4 Dark Brown Color Straight Human Hair Lace Front Wigs For women 13x4/13x6 HD Transparent",
+   "listedColour": "dark brown",
+   "hex": "#b38676"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/2F1ZfynibfYOpTtnyz4fzA",
+   "title": "Ruth- 13X4 Dark Brown  Wavy Bob Lace Front Human Hair Wigs",
+   "listedColour": "dark brown",
+   "hex": "#3a2824"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/bm7JEPSLINOuwff5glVG3",
+   "title": "Dark Brown Straight HD Lace Front Wig Chocolate Brown Colored Glueless Human Hair Wigs",
+   "listedColour": "chocolate brown",
+   "hex": "#5f5453"
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/4oLPSt5cQL5R46Ny0Nt8cM",
+   "title": "VARIAHAIR Dark Chestnut Brown Side Part Silky Straight Bob 5x5 Lace Closure Human Hair Wig",
+   "listedColour": "brown",
+   "hex": null
+  },
+  {
+   "name": "dark brown",
+   "listingId": "gid://shopify/p/5ap3ehSeWTHJWV1ALV0xqo",
+   "title": "SWAY Dark Chocolate Brown Defined Deep Curly Short Bob 13x4 Lace Front Human Hair Wigs",
+   "listedColour": "chocolate brown",
+   "hex": null
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/ywwcDvYcsQ1yebgGB50K3",
+   "title": "Put On and Go Realistic Glueless Yaki Straight Bob with Bangs Minimalist Lace Wig 100% Hum",
+   "listedColour": "Brown Highlight",
+   "hex": "#babab8"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/6Podm3lqO2b3wsfe04zD8N",
+   "title": "5x5 HD Swiss Lace Front Medium Brown Wigs Body Wave Human Hair",
+   "listedColour": "medium brown",
+   "hex": "#ce9d7d"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/5V7NzFvxsXv2Z1NXsoHkBC",
+   "title": "#4 Chocolate Brown 13x4 HD Lace Front Wigs Human Hair Wigs For Women Pre Plucked 220% Dens",
+   "listedColour": "#4 Chocolate Brown",
+   "hex": "#915c3c"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/3y7gmXwaE0g2t2S3cmC8x2",
+   "title": "Megalook 13x6 Three-Go™ Chocolate Brown Glueless Wigs Straight With Drawstring 100% Human ",
+   "listedColour": "chocolate brown",
+   "hex": "#9c7166"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/4DYbNRIiASlLYfUDC18DQ3",
+   "title": "NatureMAX™ 200% Density Loose Wave Glueless 13x6 HD Lace Front Wig Human Hair Pre-Cut Lace",
+   "listedColour": "Ombre Brown",
+   "hex": "#93918d"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/2jbbN6PcHqi9HQDkP7YjOx",
+   "title": "ZSF Medium Brown 4# Straight HD Lace Wig Color Wigs Human Hair",
+   "listedColour": "medium brown",
+   "hex": null
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/4QuQbvFUQAEGeZ6gUlpUZY",
+   "title": "CAIRO",
+   "listedColour": null,
+   "hex": "#423a32"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/1tH4Fpw0WC3gNgALfLFQ4I",
+   "title": "NatureMAX™ 200% Density Ombre Brown / Natural Black Loose Wave Glueless 13x6 / 13x4 HD Lac",
+   "listedColour": "Ombre Brown",
+   "hex": "#302720"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/3QJR1CE2f3A2BGA2zxO0gF",
+   "title": "ZSF Chocolate Brown 4# Body Wave Lace Wig Brazilian Human Virgin Hair One Piece",
+   "listedColour": "Chocolate Brown 4#",
+   "hex": "#a5735a"
+  },
+  {
+   "name": "medium brown",
+   "listingId": "gid://shopify/p/7MWPdsgZneI4Vcld86trLX",
+   "title": "OUTLET | Brown Highlight Silky Blunt Cut Bob Glueless Lace Wig SA ONLY",
+   "listedColour": "brown",
+   "hex": null
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/5V7NzFvxsXv2Z1NXsoHkBC",
+   "title": "#4 Chocolate Brown 13x4 HD Lace Front Wigs Human Hair Wigs For Women Pre Plucked 220% Dens",
+   "listedColour": "#4 Chocolate Brown",
+   "hex": "#915c3c"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/3y7gmXwaE0g2t2S3cmC8x2",
+   "title": "Megalook 13x6 Three-Go™ Chocolate Brown Glueless Wigs Straight With Drawstring 100% Human ",
+   "listedColour": "chocolate brown",
+   "hex": "#9c7166"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/KATk5XTMpRQ7SccjO24oI",
+   "title": "OQ HAIR #4 Chocolate Brown Color 13x6 Lace Front Wigs Preplucked Colored Human Hair Wear G",
+   "listedColour": "chocolate brown",
+   "hex": "#9e5e3c"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/3QJR1CE2f3A2BGA2zxO0gF",
+   "title": "ZSF Chocolate Brown 4# Body Wave Lace Wig Brazilian Human Virgin Hair One Piece",
+   "listedColour": "Chocolate Brown 4#",
+   "hex": "#a5735a"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/66VNxApvWiz6chLbtMUGe6",
+   "title": "@georgiaokun Recommend #4 Chocolate Brown Wear & Go Glueless 7x6/ Upagrade 13x6 FULL Front",
+   "listedColour": "chocolate brown",
+   "hex": "#58372c"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/50weQGWOdOkP0tbslpRNWP",
+   "title": "Chocolate Brown Color Glueless Body Wave Wig Pre Cut 8x5 HD Lace Human Hair Wigs For Women",
+   "listedColour": "chocolate brown",
+   "hex": "#cd8b65"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/3ucq1ERqrcSvYGgpDKYl44",
+   "title": "Megalook 13x6 Three-Go™ Chocolate Brown Glueless Wigs Bohemian Curl with Drawstring 100% H",
+   "listedColour": "chocolate brown",
+   "hex": "#9d8d8a"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/5iS0HQWpWpyWZ0riQ874ad",
+   "title": "Lumiere Hair Chocolate Brown Body Wave Wig  13x6 Lace Front Human Hair Wigs",
+   "listedColour": "chocolate brown",
+   "hex": null
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/3hrp7VlERa14yAPGjpfPTe",
+   "title": "BOGO SALE|Chocolate Brown Human Hair Wigs 13x4 HD Lace Front Colored Wig For Women",
+   "listedColour": "chocolate brown",
+   "hex": "#775855"
+  },
+  {
+   "name": "chocolate brown",
+   "listingId": "gid://shopify/p/4qkxJpde15Cpml2XuJ1qAm",
+   "title": "Brown Body Wave Lace Front Wig 13x4 Lace Frontal Wig Chocolate Brown Colored Human Hair Wi",
+   "listedColour": "chocolate brown",
+   "hex": null
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/ywwcDvYcsQ1yebgGB50K3",
+   "title": "Put On and Go Realistic Glueless Yaki Straight Bob with Bangs Minimalist Lace Wig 100% Hum",
+   "listedColour": "Brown Highlight",
+   "hex": "#babab8"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/5V7NzFvxsXv2Z1NXsoHkBC",
+   "title": "#4 Chocolate Brown 13x4 HD Lace Front Wigs Human Hair Wigs For Women Pre Plucked 220% Dens",
+   "listedColour": "#4 Chocolate Brown",
+   "hex": "#915c3c"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/63KGhVwgRcfTyIJZKcHQII",
+   "title": "Highlight Light Brown Short Bob Straight Glueless 13x4 Full Lace Front Human Hair Wig - Am",
+   "listedColour": "light brown",
+   "hex": "#160b04"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/3OiW9VjMe6oaRT3GwHcHN5",
+   "title": "Luvme All-Day Comfort™ Wig 180% Density Ombre Brown Butterfly Cut Layered Light Yaki Strai",
+   "listedColour": "brown",
+   "hex": "#443834"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/3y7gmXwaE0g2t2S3cmC8x2",
+   "title": "Megalook 13x6 Three-Go™ Chocolate Brown Glueless Wigs Straight With Drawstring 100% Human ",
+   "listedColour": "chocolate brown",
+   "hex": "#9c7166"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/4nLBA3keCMyVdoiIHDh3Gi",
+   "title": "#6 Light Brown Colored Straight Wig Chestnut Transparent Lace Wig Human Hair",
+   "listedColour": "light brown",
+   "hex": "#553926"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/22QbaYqk7QXsFxs3G38lfw",
+   "title": "#6 Light Brown Wigs Chestnut Color Long Light Brown Human Hair Lace Front Wigs",
+   "listedColour": "light brown",
+   "hex": "#936955"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/1tH4Fpw0WC3gNgALfLFQ4I",
+   "title": "NatureMAX™ 200% Density Ombre Brown / Natural Black Loose Wave Glueless 13x6 / 13x4 HD Lac",
+   "listedColour": "Ombre Brown",
+   "hex": "#302720"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/6tJo5xOoCoHhXWxo2sT0it",
+   "title": "Perfect for Newbies! Honey Brown Hair Caramel Highlights 180% Density",
+   "listedColour": "brown",
+   "hex": "#544f47"
+  },
+  {
+   "name": "light brown",
+   "listingId": "gid://shopify/p/3VmsK2yrcDi3wl0WYFWPwT",
+   "title": "#27 Light Brown 13x4 13x6 Frontal Lace Wigs Pre-plucked Deep Wave Human Hair",
+   "listedColour": "light brown",
+   "hex": "#805e3e"
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/36fPCIdMbwd2RAcMDjE8e8",
+   "title": "Body Wave Human Hair Wigs Auburn Brown Color Drawstring HD Lace Frontal Wigs with Pre-Pluc",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/nxgzVeAMzDkGI3f2Zr1kL",
+   "title": "Kelsie-Silky Straight Auburn Brown 13X4 Lace Front Human Hair Wig",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/1zk6wkmkLhqJy7ou8LKxU2",
+   "title": "ZSF Auburn Brown 33# Straight Transparent Lace Wig Human Hair One Piece",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/jpUixDGEeC3Kt1WwtbaUC",
+   "title": "1B/30 Auburn Balayage Highlight Body Wave 13x6 Deep Part Glueless HD Lace Frontal Human Ha",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/3pO9EqCxuptkeqjmfV9QRM",
+   "title": "#33 Reddish Brown Auburn Water Wave Human Hair Wig HD Transparent 13x4 Lace Front Wig",
+   "listedColour": "auburn",
+   "hex": "#65332c"
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/3Qtj4Uwj9pexVM1J0gjL5f",
+   "title": "#33 Reddish Brown Auburn Color Water Wave & Body Wave Human Hair Wigs 13x4 HD Lace Front W",
+   "listedColour": "auburn",
+   "hex": "#69281d"
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/wwFLhA3oIe3McZRiPMYuG",
+   "title": "ZSF Layered Cut Auburn Brown 33# Straight Wig Human Hair One Piece",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/QhZLF8m211lT7QVg7t9uH",
+   "title": "VARIAHAIR Glueless Middle Part Copper Auburn Ombre Loose Wavy 13x4 Lace Frontal Human Hair",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/qYvio71RwWFnj6F1OvD0L",
+   "title": "Zlike Ombre Brown Light Auburn Loose Deep Wave Wigs Transparent Lace Front Human Hair Wigs",
+   "listedColour": "auburn",
+   "hex": null
+  },
+  {
+   "name": "auburn",
+   "listingId": "gid://shopify/p/7zn53SoXl4VNkQQRIdrn6f",
+   "title": "Layered Curly Wig Brown Auburn Color Double Drawn Human Hair Wigs 250% Density Glueless Dr",
+   "listedColour": "auburn",
+   "hex": "#502017"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/3Dtlvve1uLQs0uFjTfSlkz",
+   "title": "4/27 Honey Blonde Highlight Body Wave HD Lace Front Human Hair Wigs Free Part",
+   "listedColour": "honey blonde",
+   "hex": "#5d3a2c"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/79RkUuXCr2R7HjF15dtMnm",
+   "title": "Megalook 13x6 Three-Go™ Highlight Honey Blonde Glueless Wigs Silky Straight With Drawstrin",
+   "listedColour": "honey blonde",
+   "hex": null
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/34XFt5D7ZtNoBpl6IorVnp",
+   "title": "Tuneful Super Deal 27# Honey Blonde 13x6 Lace Colored Human Hair Straight Wigs 180% Densit",
+   "listedColour": "honey blonde",
+   "hex": "#dfb991"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/109RxBFOu2Gxc1LBglY3jO",
+   "title": "Carlin- Honey Blonde Highlight Body Wave Lace Front Human Hair Wig",
+   "listedColour": "honey blonde",
+   "hex": "#b7896d"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/7BxSLrXY1l9fqAOe6CBZAQ",
+   "title": "300% Density Pre Cut Honey Blonde Highlight Loose Deep Wigs Virgin Human Hair Transparent ",
+   "listedColour": "honey blonde",
+   "hex": "#655146"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/3AYMRTNo37bLEl1NqEEBwW",
+   "title": "4/27 Highlights Honey Blonde Wig 13*4 HD Lace Front Human Hair Colored Wigs For Women",
+   "listedColour": "honey blonde",
+   "hex": "#eec0a3"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/KtmZ4BW5Gy95bCpN1MEYo",
+   "title": "Zlike Honey Blonde Highlight 13x4 Lace Front Water Wave Wigs Human Hair Wigs",
+   "listedColour": "Honey Blonde Highlight",
+   "hex": null
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/2JiS9S65bKMeLD1EAy4Jq7",
+   "title": "Honey Blonde Highlight Water Wave Wig 13x4 13x6 Lace Front Wig Colored Human Hair Lace Wig",
+   "listedColour": "honey blonde",
+   "hex": null
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/5gLnzopflJgSgCvhaRUzmb",
+   "title": "Honey Blonde Lace Front Wig Human Hair Body Wave 13x4 HD Lace Frontal Wigs Human Hair 250%",
+   "listedColour": "honey blonde",
+   "hex": "#5f3e20"
+  },
+  {
+   "name": "honey blonde",
+   "listingId": "gid://shopify/p/6la8FSGxmAeqhorBfrorDo",
+   "title": "#27 Honey Blonde Straight/Body Wave Upgrade 8x5 Pre Cut HD Lace Ready & Go Glueless Human ",
+   "listedColour": "honey blonde",
+   "hex": null
+  }
+ ]
+}
