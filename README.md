@@ -5,6 +5,7 @@
 Before treatment changes your hair and brows, Kept measures them with YouCam's AI — hair curl, density and length, brow colour and shape, skin tone — and reads your exact hair shade from the same photo. Every wig, brow and colour you choose afterwards starts from that measured likeness, not from guesswork.
 
 - **Live app:** https://kept-likeness.vercel.app (demo personas work without a camera or an account)
+- **Demo video (2:32):** https://youtu.be/itMAh8tc95E
 - **Proof:** https://kept-likeness.vercel.app/proof · [CLAIMS.md](CLAIMS.md) · [JUDGES.md](JUDGES.md)
 
 ## Why
