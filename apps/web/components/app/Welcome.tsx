@@ -31,7 +31,7 @@ export function Welcome() {
       <Title sub="Kept keeps a measured record of how you look now, so every choice during treatment can start from you.">Before we measure anything</Title>
       <Card title="What happens">
         <ul className="space-y-3 pb-4 text-[15px] leading-[1.55] text-[var(--ink-2)]">
-          <li><b className="font-semibold text-[var(--ink)]">Measured:</b> hair colour family, curl, density and length; brow colour and shape; skin tone.</li>
+          <li><b className="font-semibold text-[var(--ink)]">Measured:</b> hair shade, curl, density and length; brow colour and shape; skin tone.</li>
           <li><b className="font-semibold text-[var(--ink)]">By:</b> YouCam AI from Perfect Corp, on their servers in the US. Kept deletes each measurement there as soon as it has read the result.</li>
           <li><b className="font-semibold text-[var(--ink)]">Kept here:</b> your photos and measurements stay in this browser. You can delete everything in one tap.</li>
           <li><b className="font-semibold text-[var(--ink)]">Not medical:</b> Kept helps with appearance only. Questions about treatment, medicines or symptoms go to your care team.</li>

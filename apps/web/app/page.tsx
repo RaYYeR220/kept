@@ -7,20 +7,20 @@ const STEPS = [
   {
     verb: "Measure",
     title: "Measure while it's still yours",
-    body: "Four photos, about a minute. YouCam's skin-tone, face-attribute and hair APIs read your hair colour, curl, density and length, your brow colour and shape, and your skin tone.",
+    body: "Four photos, about a minute. YouCam's skin-tone, face and hair APIs read your curl, density and length, your brow colour and shape, and your skin tone. Kept reads your exact hair shade from the same photo.",
     api: "YouCam Skin Tone · Face Analyzer · Hair Type, Length, Density",
   },
   {
     verb: "Choose",
     title: "Choose your hair from you",
-    body: "Kept searches real wig listings, ranks them against your measured likeness and puts the best ones on your own photo, so you can choose before day 18.",
+    body: "Kept searches real wig listings, reads the hair shade on every listing photo the same way it read yours, ranks them by colour distance and puts the best ones on your own photo — before day 18.",
     api: "YouCam Hairstyle Transfer · Shop Catalog",
   },
   {
     verb: "Draw back",
     title: "Draw your brows back",
-    body: "When brows and lashes thin, Kept draws them back on today's photo in your own measured colour and shape — something to copy in the mirror.",
-    api: "YouCam Makeup VTO (eyebrows, lashes)",
+    body: "When brows and lashes thin, Kept draws them back on today's photo, has YouCam measure the drawing, and corrects it until it reads as your own shade.",
+    api: "YouCam Makeup VTO + Face Analyzer, in a loop",
   },
 ];
 
