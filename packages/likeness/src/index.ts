@@ -7,5 +7,6 @@ export * from "./rank.ts";
 export * from "./rules.ts";
 export * from "./schema.ts";
 export * from "./scope.ts";
+export * from "./share.ts";
 export * from "./thresholds.ts";
 export * from "./timeline.ts";
