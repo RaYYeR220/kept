@@ -166,6 +166,9 @@ importers:
       '@kept/likeness':
         specifier: workspace:^
         version: link:../../packages/likeness
+      '@kept/shop':
+        specifier: workspace:^
+        version: link:../../packages/shop
       '@kept/youcam':
         specifier: workspace:^
         version: link:../../packages/youcam

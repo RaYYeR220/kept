@@ -76,7 +76,7 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
   }
   // YouCam's hair-colour attribute is a six-family classifier; for matching wigs Kept reads
   // the shade itself from the band of hair above the face YouCam found.
-  const hairSample = box ? await sampleHairFromBox(photos.front, box) : null;
+  const hairSample = box ? await sampleHairFromBox(photos.front, box, false) : null;
   const hairSampleAt = now();
   if (photos.top) ids.top = (await yc.upload(photos.top, "image/jpeg", "top.jpg")).fileId;
   if (photos.right && photos.left) {

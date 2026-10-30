@@ -79,15 +79,15 @@
     "hair": {
      "color": {
       "value": {
-       "hex": "#b56637",
-       "name": "Auburn"
+       "hex": "#34251c",
+       "name": "Dark brown"
       },
       "prov": {
-       "api": "skin-tone-analysis",
-       "version": "v2.0",
-       "taskId": "MNh8c-pJC6FDjC_J7jY8WGJaQ4LFCpTDlztVKekjTRaPqejg6aLlHBe8YihztOwHaWDS9eILM6KP1umZGeEfHw",
-       "units": 20,
-       "at": "2026-10-30T07:40:09.106Z",
+       "api": "kept-hair-sampler",
+       "version": "1.0",
+       "taskId": "vCUqIy8dyO79QSbfhyzx1n9PGqUArbUgEyB3pNXJCCl3gCYryTKWvAvf_WHnbXiYVSf2WmnU8QD4vnx7klL26A",
+       "units": 0,
+       "at": "2026-10-30T07:52:47.095Z",
        "source": "replay"
       }
      },
@@ -243,5 +243,8 @@
    ],
    "units": 45
   }
+ ],
+ "patches": [
+  "resample 2026-10-30T07:52:47.097Z"
  ]
 }

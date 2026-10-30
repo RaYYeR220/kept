@@ -25,7 +25,8 @@
   {
    "type": "step",
    "key": "hairDensity",
-   "status": "running"
+   "status": "done",
+   "units": 1
   },
   {
    "type": "step",
@@ -52,13 +53,8 @@
   {
    "type": "step",
    "key": "hairDensity",
-   "status": "failed",
-   "detail": "error_no_face"
-  },
-  {
-   "type": "retake",
-   "key": "hairDensity",
-   "message": "We couldn't find a face. Face the camera with your whole face in view."
+   "status": "done",
+   "units": 1
   },
   {
    "type": "step",
@@ -84,15 +80,15 @@
     "hair": {
      "color": {
       "value": {
-       "hex": "#b56637",
-       "name": "Auburn"
+       "hex": "#1a1919",
+       "name": "Black"
       },
       "prov": {
-       "api": "skin-tone-analysis",
-       "version": "v2.0",
-       "taskId": "EywR9fUU-xMw-22PZT9ACukJVYdoSiYtXPeFCuXHU7uhOdropaEjgHDW1bf7uDpoaWDS9eILM6KP1umZGeEfHw",
-       "units": 20,
-       "at": "2026-10-30T07:40:55.868Z",
+       "api": "kept-hair-sampler",
+       "version": "1.0",
+       "taskId": "Tdw0fwsEj2ZeGDLAWPVG32A5ekGeQS_N0owIxyMZYxD29Fk1eC5JkHwQubiYGrLLVSf2WmnU8QD4vnx7klL26A",
+       "units": 0,
+       "at": "2026-10-30T07:52:56.118Z",
        "source": "replay"
       }
      },
@@ -124,7 +120,20 @@
        "source": "replay"
       }
      },
-     "density": null,
+     "density": {
+      "value": {
+       "mapping": "2.51",
+       "term": "High Density"
+      },
+      "prov": {
+       "api": "hair-density-detection",
+       "version": "v2.0",
+       "taskId": "l3ZrSbBSn-w4JXe2oZpWkiafiuGDKE2A9LGj2RwUhIvy4Ny_H8uYcTuZKy4NvQpLc8aViIJBDiFRYIwMoW59pQ",
+       "units": 1,
+       "at": "2026-10-30T07:54:12.707Z",
+       "source": "replay"
+      }
+     },
      "frizz": null
     },
     "brows": {
@@ -235,5 +244,9 @@
    ],
    "units": 44
   }
+ ],
+ "patches": [
+  "resample 2026-10-30T07:52:56.120Z",
+  "density 2026-10-30T07:54:12.708Z"
  ]
 }

@@ -8,6 +8,7 @@ import { createYouCam } from "@kept/youcam";
 import type { Likeness } from "@kept/likeness";
 import { captureLikeness, type CaptureEvent } from "../../apps/web/lib/server/capture.ts";
 import { calibrateBrows, renderHat, renderWig } from "../../apps/web/lib/server/tryon.ts";
+import { sampleHair } from "../../apps/web/lib/server/sample.ts";
 
 const [cmd, persona = "anna", ...rest] = process.argv.slice(2);
 const dir = new URL(`../../apps/web/fixtures/replay/${persona}/`, import.meta.url);
@@ -47,6 +48,29 @@ if (cmd === "capture") {
   save("brows", { recordedAt: at(), units: c.units, api: "makeup-vto", pattern: c.best.pattern, rounds: c.rounds, deltaE: c.best.deltaE, measuredHex: c.best.measuredHex, targetHex: brows.hex });
   save("verify-brows", { recordedAt: at(), measuredHex: c.best.measuredHex, deltaE: c.best.deltaE, units: 0, rounds: c.rounds });
   console.log("rounds", c.rounds, "units", c.units);
+} else if (cmd === "resample" || cmd === "density") {
+  // Patch an existing capture recording: hair shade from the sampler, or density from a new parting photo.
+  const file = new URL("capture.json", dir);
+  const cap = JSON.parse(readFileSync(file, "utf8")) as { recordedAt: string; events: CaptureEvent[]; patches?: string[] };
+  const done = cap.events.at(-1);
+  if (done?.type !== "done") throw new Error("capture first");
+  if (cmd === "resample") {
+    const s = await sampleHair(yc, photo("front"), "record", false);
+    if (!s) throw new Error("no face found");
+    done.likeness.hair.color = { value: { hex: s.hex, name: s.name }, prov: { api: "kept-hair-sampler", version: "1.0", taskId: s.taskId, units: 0, at: at(), source: "replay" } };
+    console.log("hair", s);
+  } else {
+    const { fileId } = await yc.upload(photo("top"), "image/jpeg", "top.jpg");
+    const r = await yc.run("hairDensity", { src_file_id: fileId });
+    await yc.deleteTask(r.taskId).catch(() => {});
+    const t = (r.results as { hair_density?: { mapping?: string; term?: string } }).hair_density;
+    if (!t?.term) throw new Error("no density");
+    done.likeness.hair.density = { value: { mapping: t.mapping ?? null, term: t.term }, prov: { api: "hair-density-detection", version: "v2.0", taskId: r.taskId, units: r.units, at: at(), source: "replay" } };
+    cap.events = cap.events.map((e) => (e.type === "step" && e.key === "hairDensity" ? { ...e, status: "done", units: r.units, detail: undefined } : e)).filter((e) => !(e.type === "retake" && e.key === "hairDensity"));
+    console.log("density", t);
+  }
+  cap.patches = [...(cap.patches ?? []), `${cmd} ${at()}`];
+  writeFileSync(file, JSON.stringify(cap, null, 1));
 } else if (cmd === "wig" || cmd === "hat") {
   const [listingId, imageUrl] = rest;
   if (!listingId || !imageUrl) throw new Error("listingId and imageUrl required");
