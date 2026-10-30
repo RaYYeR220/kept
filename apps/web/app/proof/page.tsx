@@ -5,6 +5,10 @@ import proof from "@/data/proof.json";
 export const metadata = { title: "Kept — Proof" };
 
 type Cell = { pass: number; total: number };
+type BrowRun = { targetHex: string; rounds: Array<{ round: number; measuredHex: string | null; deltaE: number | null; units: number }>; best: number | null } | null;
+type Audit = { file: string; date: string; groups: Array<{ name: string; searched: number; measured: number; meanHex: string | null; maxPairDeltaE: number }>; crossed: number; measured: number } | null;
+const brows = (proof as unknown as { brows: Record<string, BrowRun> }).brows;
+const audit = (proof as unknown as { audit: Audit }).audit;
 type Run = { tag: string; file: string; date: string; model: string; code: string; byMode: Record<string, Record<string, Cell>> };
 const runs = proof.runs as Run[];
 const REPO = "https://github.com/RaYYeR220/kept/blob/main/";
@@ -68,7 +72,65 @@ export default function Proof() {
           Kept must never give medical advice and must always hand urgent messages to a person. That is enforced in code before any language model reads a message, and every reply is linted again before it is shown. These are the measured results, including the ones that went badly.
         </p>
 
-        <section className="mt-16 space-y-6">
+        <section className="mt-16">
+          <h2 className="font-display text-[32px] font-medium tracking-[-0.03em] sm:text-[40px]">Drawn, then measured again</h2>
+          <p className="mt-3 max-w-[70ch] text-[16px] leading-[1.6] text-[var(--ink-2)]">
+            After YouCam&apos;s makeup try-on draws the brows back, YouCam&apos;s Face Analyzer measures the drawing and Kept corrects the colour for the next round. Recorded live on 30 Oct for both demo personas.
+          </p>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+            {Object.entries(brows).map(([who, b]) =>
+              b ? (
+                <div key={who} className="rounded-card border border-[var(--line)] bg-oat-50/60 p-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-display text-[22px] font-medium capitalize tracking-[-0.02em]">{who}</h3>
+                    <span className="inline-flex items-center gap-2 text-[14px] text-[var(--ink-2)]">
+                      before treatment <span className="h-5 w-5 rounded-full border border-oat-900/15" style={{ background: b.targetHex }} /> {b.targetHex.toUpperCase()}
+                    </span>
+                  </div>
+                  <ol className="mt-4">
+                    {b.rounds.map((r) => (
+                      <li key={r.round} className="flex items-center justify-between border-t border-[var(--line)] py-2.5 text-[15px]">
+                        <span>Round {r.round}</span>
+                        <span className="inline-flex items-center gap-2 tabular-nums">
+                          {r.measuredHex && <span className="h-4 w-4 rounded-full border border-oat-900/15" style={{ background: r.measuredHex }} />}
+                          {r.deltaE === null ? "—" : r.deltaE === 0 ? "same shade" : `ΔE ${r.deltaE}`}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                  <p className="mt-3 text-[13px] leading-[1.5] text-[var(--ink-3)]">
+                    {b.best === 0 ? "Reached the shade measured before treatment." : `Best round ΔE ${b.best}. On deep skin the drawn brows read lighter than intended; the loop keeps the best round instead of the last.`}
+                  </p>
+                </div>
+              ) : null,
+            )}
+          </div>
+          <p className="mt-4 text-[14px] text-[var(--ink-3)]">
+            The try-on also brightens the whole face (cheek ΔE ≈ 3.5 on both personas). Kept fits the render back onto the person&apos;s own photo, bringing that to under 1.
+          </p>
+        </section>
+
+        {audit && (
+          <section className="mt-16">
+            <h2 className="font-display text-[32px] font-medium tracking-[-0.03em] sm:text-[40px]">What a colour name on a wig listing means</h2>
+            <p className="mt-3 max-w-[70ch] text-[16px] leading-[1.6] text-[var(--ink-2)]">
+              We searched the Shopify catalogue for {audit.groups.length} colour names and read the hair shade on each listing photo. {audit.crossed} of {audit.measured} measured listings sat closer to another name&apos;s average than to their own.
+            </p>
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {audit.groups.map((g) => (
+                <div key={g.name} className="rounded-[20px] border border-[var(--line)] bg-oat-50/60 p-4">
+                  <div className="h-10 w-10 rounded-full border border-oat-900/15" style={{ background: g.meanHex ?? "transparent" }} />
+                  <p className="mt-3 text-[15px] font-semibold capitalize">“{g.name}”</p>
+                  <p className="text-[13px] text-[var(--ink-3)]">{g.measured}/{g.searched} measured · spread ΔE {g.maxPairDeltaE}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-[13px] text-[var(--ink-3)]">Dated snapshot {audit.date}; listing photos vary in light and styling, which is part of the point. Data: {audit.file}.</p>
+          </section>
+        )}
+
+        <h2 className="mt-20 font-display text-[32px] font-medium tracking-[-0.03em] sm:text-[40px]">Medical questions never reach the model</h2>
+        <section className="mt-6 space-y-6">
           {STAGES.map((s) => {
             const r = find(s.tag);
             const cmp = s.compare ? find(s.compare) : undefined;

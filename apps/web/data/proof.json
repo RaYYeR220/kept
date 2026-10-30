@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-30T06:30:26.415Z",
+ "generatedAt": "2026-10-30T08:16:09.224Z",
  "runs": [
   {
    "tag": "blind-v3-router+classifier-misconfigured",
@@ -200,5 +200,56 @@
     }
    }
   }
- ]
+ ],
+ "brows": {
+  "anna": {
+   "targetHex": "#805d47",
+   "rounds": [
+    {
+     "round": 1,
+     "measuredHex": "#a17a63",
+     "deltaE": 11.8,
+     "units": 11
+    },
+    {
+     "round": 2,
+     "measuredHex": "#a17a63",
+     "deltaE": 11.8,
+     "units": 11
+    },
+    {
+     "round": 3,
+     "measuredHex": "#805d47",
+     "deltaE": 0,
+     "units": 11
+    }
+   ],
+   "best": 0
+  },
+  "marcus": {
+   "targetHex": "#3e3834",
+   "rounds": [
+    {
+     "round": 1,
+     "measuredHex": "#5b575a",
+     "deltaE": 11.4,
+     "units": 11
+    },
+    {
+     "round": 2,
+     "measuredHex": "#5b575a",
+     "deltaE": 11.4,
+     "units": 11
+    },
+    {
+     "round": 3,
+     "measuredHex": "#805d47",
+     "deltaE": 19.3,
+     "units": 11
+    }
+   ],
+   "best": 11.4
+  }
+ },
+ "audit": null
 }

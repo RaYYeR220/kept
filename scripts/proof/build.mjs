@@ -1,5 +1,5 @@
 // Collects the evaluation reports into apps/web/data/proof.json for the /proof page.
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = new URL("../../", import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1");
@@ -20,6 +20,16 @@ const runs = readdirSync(dir)
     return { tag, file: `eval/reports/${f.replace(/\.json$/, ".md")}`, date: r.date, model: r.model, code: r.code, byMode };
   });
 
-const out = { generatedAt: new Date().toISOString(), runs };
+const brows = Object.fromEntries(
+  ["anna", "marcus"].map((p) => {
+    const f = join(root, "apps", "web", "fixtures", "replay", p, "brows.json");
+    if (!existsSync(f)) return [p, null];
+    const b = JSON.parse(readFileSync(f, "utf8"));
+    return [p, { targetHex: b.targetHex, rounds: b.rounds.map((r) => ({ round: r.round, measuredHex: r.measuredHex, deltaE: r.deltaE === null ? null : Number(r.deltaE.toFixed(1)), units: r.units })), best: b.deltaE === null ? null : Number(b.deltaE.toFixed(1)) }];
+  }),
+);
+const auditFile = existsSync(join(root, "data")) ? readdirSync(join(root, "data")).filter((f) => /^audit-.*\.json$/.test(f)).sort().at(-1) : undefined;
+const audit = auditFile ? (({ date, groups, crossed, measured }) => ({ file: `data/${auditFile}`, date, groups, crossed, measured }))(JSON.parse(readFileSync(join(root, "data", auditFile), "utf8"))) : null;
+const out = { generatedAt: new Date().toISOString(), runs, brows, audit };
 writeFileSync(join(root, "apps", "web", "data", "proof.json"), JSON.stringify(out, null, 1));
-console.log(`proof.json: ${runs.length} runs`);
+console.log(`proof.json: ${runs.length} runs, brows ${Object.keys(brows).length}, audit ${audit ? audit.measured : "none"}`);
