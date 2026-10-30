@@ -12,6 +12,9 @@ type Turn =
   | { kind: "reply"; text: string; renders: string[]; checkouts: string[]; receipts: Receipt[] };
 type Listing = { listingId: string; imageUrl: string; variantId: string; shopDomain: string };
 
+/** Models sometimes add markdown emphasis anyway; show it as plain text. */
+const plain = (t: string) => t.replace(/\*\*(.+?)\*\*/g, "$1").replace(/(^|\s)\*(\S.*?)\*(?=\s|$)/g, "$1$2").replace(/^#+\s*/gm, "");
+
 const SUGGESTIONS = ["Which wig would match me best?", "Show me my brows back", "A soft cap for sleeping, in a colour that suits me", "Can I use retinol on paclitaxel?"];
 
 const GATE_LABEL: Record<string, string> = {
@@ -90,7 +93,7 @@ export default function AskPage() {
             </div>
           ) : (
             <div key={m.id} className="mr-6 rounded-[22px] rounded-bl-md border border-[var(--line)] bg-oat-50/80 px-4 py-3 text-[15px] leading-[1.55]">
-              <p className="whitespace-pre-line">{m.content}</p>
+              <p className="whitespace-pre-line">{plain(m.content)}</p>
               {m.renders?.map((r) =>
                 images[r] ? (
                   // eslint-disable-next-line @next/next/no-img-element

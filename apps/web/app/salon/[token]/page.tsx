@@ -68,7 +68,7 @@ export default function SalonView({ params }: { params: Promise<{ token: string 
                 <div className="flex items-center gap-3.5 pb-3">
                   <Swatch hex={s.hair.color.value.hex} kind="hair" />
                   <div>
-                    <div className="font-display text-[22px] font-medium tracking-[-0.025em]">{s.hair.color.value.name} family</div>
+                    <div className="font-display text-[22px] font-medium tracking-[-0.025em]">{s.hair.color.value.name}</div>
                     <ProvChip prov={s.hair.color.prov} />
                   </div>
                 </div>

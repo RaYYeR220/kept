@@ -58,7 +58,7 @@ export async function runCompanion(input: CompanionInput, deps: CompanionDeps): 
     const routed = routeScope(last);
     let scope = routed.scope;
     const why = routed.matched.length ? [`keywords: ${routed.matched.join(", ")}`] : [];
-    if (deps.classifier && scope !== "urgent") {
+    if (deps.classifier && scope === "appearance") {
       const c = await classifyScope(last, deps.classifier);
       if (c.scope !== "appearance") why.push(`classifier: ${c.reason}`);
       scope = stricterScope(scope, c.scope);
@@ -85,7 +85,7 @@ export async function runCompanion(input: CompanionInput, deps: CompanionDeps): 
     system: systemPrompt(input.likeness, input.plan, input.today),
     messages: sanitizeHistory(input.messages) as ModelMessage[],
     tools,
-    stopWhen: isStepCount(deps.maxSteps ?? 5),
+    stopWhen: isStepCount(deps.maxSteps ?? 8),
   });
   let text = res.text;
 
@@ -104,7 +104,9 @@ export async function runCompanion(input: CompanionInput, deps: CompanionDeps): 
   if (!text.trim()) {
     text = refusedSpend
       ? "I can't pay for things myself. I can prepare a review-and-pay link so you can check it and pay at the store."
-      : "I couldn't do that step. Could you tell me what you'd like to see?";
+      : artifacts.renders.length
+        ? "Here it is on you."
+        : "I couldn't finish that one. Could you say it another way, or open Hair to see the ranked list?";
   }
 
   if (!deps.gatesOff) {

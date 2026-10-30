@@ -70,7 +70,11 @@ export async function POST(req: Request) {
     async tryOnWig(listingId) {
       const l = known.get(listingId);
       if (!l) throw new Error("Unknown listing");
-      if (b.mode === "replay") return { renderId: keep(replayKey("wig", listingId), replayImage(persona, replayKey("wig", listingId))), units: 0 };
+      if (b.mode === "replay") {
+        const img = replayImage(persona, replayKey("wig", listingId));
+        if (!img) throw new Error("This demo has a recorded try-on only for the pinned listing.");
+        return { renderId: keep(replayKey("wig", listingId), img), units: 0 };
+      }
       if (!before) throw new Error("No before photo");
       const r = await renderWig(youcamFor("live", sid), before, l.imageUrl, sid);
       return { renderId: keep(`wig-${r.taskId}`, r.image), units: r.units };
