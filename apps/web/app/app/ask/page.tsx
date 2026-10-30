@@ -41,8 +41,10 @@ export default function AskPage() {
     setBusy(true);
     setText("");
     await db.messages.add({ role: "user", content, at: new Date().toISOString() });
-    const prior: Array<Pick<StoredMessage, "role" | "content" | "card">> = [...(messages ?? []), { role: "user", content }];
-    const history = prior.slice(-12).map((m) => ({ role: m.role, content: m.card ? `${m.card.title}. ${m.card.body}` : m.content }));
+    // A question that was handed to the care team is not sent back to the model, nor is the card.
+    const all = messages ?? [];
+    const kept = all.filter((m, i) => !m.card && !(m.role === "user" && all[i + 1]?.card));
+    const history = [...kept.map((m) => ({ role: m.role, content: m.content })), { role: "user" as const, content }].slice(-12);
     const form = new FormData();
     form.set("body", JSON.stringify({ messages: history, likeness: stored?.likeness ?? null, plan: settings.plan, mode: settings.mode, persona: settings.persona, listings: listings.current }));
     if (settings.mode === "live") {

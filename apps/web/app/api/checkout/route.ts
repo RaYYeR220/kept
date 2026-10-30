@@ -13,6 +13,7 @@ export async function POST(req: Request) {
   try {
     return json(await shop.prepareCheckout(parsed.data));
   } catch (e) {
-    return json({ error: "The store couldn't prepare a checkout. You can still open the product page.", detail: (e as Error).message }, 502);
+    console.error(e);
+    return json({ error: "The store couldn't prepare a checkout. You can still open the product page." }, 502);
   }
 }

@@ -91,6 +91,8 @@ export function createYouCam(opts: YouCamOptions) {
         }
         await sleep(ro.pollMs ?? 2000);
       }
+      // A task that timed out on our side may still finish and be charged: keep it spent.
+      if (reservation) opts.ledger!.commit(reservation);
       throw new YouCamTaskError("task_timeout", taskId, "The measurement took too long. Please try again.");
     } catch (e) {
       if (reservation) opts.ledger!.release(reservation);

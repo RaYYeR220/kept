@@ -1,7 +1,7 @@
 import { BudgetError, YouCamHttpError, YouCamTaskError } from "@kept/youcam";
 import { youcamFor } from "@/lib/server/env";
 import { asPersona, replayImage, replayJson, replayKey } from "@/lib/server/replay";
-import { json, sessionId } from "@/lib/server/session";
+import { clientIp, json, parseJson, spendKey } from "@/lib/server/session";
 import { calibrateBrows, renderBrows, renderHat, renderWig, verifyBrows } from "@/lib/server/tryon";
 
 export const runtime = "nodejs";
@@ -40,7 +40,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ kind: string }
   if (!photo || typeof photo === "string") return json({ error: "A photo is required." }, 400);
   if (photo.size > MAX_BYTES) return json({ error: "The photo must be under 3.5 MB." }, 413);
   const bytes = new Uint8Array(await photo.arrayBuffer());
-  const sid = await sessionId();
+  const sid = await spendKey();
 
   try {
     const yc = youcamFor("live", sid);
@@ -68,6 +68,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ kind: string }
     if (e instanceof YouCamTaskError) return json({ error: e.retake ?? "That try-on didn't work with this photo.", code: e.code }, 422);
     if (e instanceof BudgetError) return json({ error: e.message, code: e.reason }, 429);
     if (e instanceof YouCamHttpError) return json({ error: "The try-on service didn't answer. Please try again.", code: e.code }, 502);
-    return json({ error: (e as Error).message }, 500);
+    console.error("tryon failed", e);
+    return json({ error: "That try-on didn't work this time. Please try again." }, 500);
   }
 }

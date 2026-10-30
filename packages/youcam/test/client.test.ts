@@ -83,6 +83,22 @@ describe("createYouCam.run", () => {
     expect(t.calls).toHaveLength(0);
   });
 
+  it("holds the caps under parallel reservations with an async credit read", async () => {
+    const ledger = new Ledger({ globalCap: 1000, sessionCap: 40, readCredit: async () => 1000 });
+    const tries = await Promise.allSettled(Array.from({ length: 6 }, () => ledger.reserve(10, "1.2.3.4|s")));
+    expect(tries.filter((t) => t.status === "fulfilled")).toHaveLength(4);
+    expect(ledger.sessionSpent("1.2.3.4|s")).toBe(40);
+  });
+
+  it("caps an IP across rotated session cookies", async () => {
+    const ledger = new Ledger({ globalCap: 1000, sessionCap: 40, ipCap: 60 });
+    await ledger.reserve(40, "9.9.9.9|a");
+    await ledger.reserve(20, "9.9.9.9|b");
+    const err = await ledger.reserve(1, "9.9.9.9|c").catch((e) => e);
+    expect(err.reason).toBe("ip_cap");
+    await expect(ledger.reserve(10, "8.8.8.8|d")).resolves.toBeTruthy();
+  });
+
   it("stops when the account's real credit is lower than the task needs", async () => {
     const ledger = new Ledger({ globalCap: 1000, sessionCap: 1000, readCredit: async () => 5 });
     const err = await ledger.reserve(20, "s").catch((e) => e);

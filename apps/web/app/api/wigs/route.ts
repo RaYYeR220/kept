@@ -31,6 +31,7 @@ export async function GET(req: Request) {
     const ranked = hex ? rankWigs({ hex, texture, lengthIn: null }, withReadings) : withReadings;
     return json({ wigs: ranked, query: { family, medical }, searchedAt: new Date().toISOString() });
   } catch (e) {
-    return json({ error: "Couldn't reach the shop catalogue right now.", detail: (e as Error).message }, 502);
+    console.error(e);
+    return json({ error: "Couldn't reach the shop catalogue right now." }, 502);
   }
 }

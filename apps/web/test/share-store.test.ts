@@ -70,6 +70,28 @@ describe("ShareStore", () => {
     expect(blobs.paths()).not.toContain(`shares/${sh.token}/photo`);
   });
 
+  it("keeps only a tombstone after a withdrawal: no measurements, no label", async () => {
+    const { s, blobs } = store();
+    const sh = await s.create({ summary, label: "Anna" });
+    await s.revoke(sh.token);
+    const raw = await s.raw(sh.token);
+    expect(raw?.revoked).toBe(true);
+    expect(raw?.summary).toBeNull();
+    expect(raw?.label).toBeNull();
+    expect(blobs.paths()).toEqual([`shares/${sh.token}/share`]);
+  });
+
+  it("sweep deletes photos of expired shares nobody opened again", async () => {
+    const { s, blobs, setNow } = store();
+    const old = await s.create({ summary, label: null, photo: new Uint8Array([1]), ttlDays: 7 });
+    const fresh = await s.create({ summary, label: null, photo: new Uint8Array([2]), ttlDays: 30 });
+    setNow("2026-11-09T00:00:00Z");
+    const r = await s.sweep();
+    expect(r).toEqual({ checked: 2, purged: 1 });
+    expect(blobs.paths()).not.toContain(`shares/${old.token}/photo`);
+    expect(blobs.paths()).toContain(`shares/${fresh.token}/photo`);
+  });
+
   it("treats malformed tokens as missing without touching storage", async () => {
     const { s } = store();
     expect((await s.get("../../etc")).status).toBe("missing");

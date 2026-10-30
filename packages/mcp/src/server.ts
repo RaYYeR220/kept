@@ -89,8 +89,8 @@ export function createKeptMcpServer(deps: KeptMcpDeps): McpServer {
       description: "When hair, brows and lashes typically change, from treatment dates. Cosmetic planning only.",
       inputSchema: {
         first_infusion: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-        cycle_days: z.number().int().positive().optional(),
-        cycles: z.number().int().positive().optional(),
+        cycle_days: z.number().int().min(7).max(60).optional(),
+        cycles: z.number().int().min(1).max(30).optional(),
       },
       annotations: { readOnlyHint: true },
     },

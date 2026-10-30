@@ -15,6 +15,7 @@ export function liveLedger(): Ledger {
   ledger ??= new Ledger({
     globalCap: num(process.env.KEPT_UNIT_CAP, 600),
     sessionCap: num(process.env.KEPT_SESSION_UNIT_CAP, 40),
+    ipCap: num(process.env.KEPT_IP_UNIT_CAP, 120),
     // Keep a floor of units for recording the demo and for judges; stop live spending below it.
     readCredit: async () => (await youcamLive().credit()) - num(process.env.KEPT_UNIT_FLOOR, 100),
   });
@@ -63,6 +64,10 @@ export const shop = createShop();
 let store: ShareStore | null = null;
 export function shares(): ShareStore {
   if (store) return store;
+  // Without a key, shares only ever live in this process's memory (local development).
+  if (!process.env.SHARE_ENCRYPTION_KEY && (process.env.BLOB_READ_WRITE_TOKEN || process.env.NODE_ENV === "production")) {
+    throw new Error("SHARE_ENCRYPTION_KEY must be set wherever shares are stored.");
+  }
   const key = process.env.SHARE_ENCRYPTION_KEY ? keyFromEnv() : Buffer.alloc(32, 7);
   store = new ShareStore(process.env.BLOB_READ_WRITE_TOKEN ? vercelBlobs() : memoryBlobs(), key);
   return store;

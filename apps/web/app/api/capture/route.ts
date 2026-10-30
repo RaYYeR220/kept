@@ -2,7 +2,7 @@ import { BudgetError, YouCamHttpError } from "@kept/youcam";
 import { captureLikeness, type CaptureEvent } from "@/lib/server/capture";
 import { youcamFor } from "@/lib/server/env";
 import { asPersona, replayJson } from "@/lib/server/replay";
-import { json, sessionId } from "@/lib/server/session";
+import { clientIp, json, parseJson, spendKey } from "@/lib/server/session";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
     return json({ error: (e as Error).message }, 413);
   }
 
-  const sid = await sessionId();
+  const sid = await spendKey();
   let yc;
   try {
     yc = youcamFor("live", sid);

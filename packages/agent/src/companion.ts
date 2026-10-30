@@ -31,6 +31,25 @@ export type CompanionTurn =
   | { kind: "refusal"; scope: "medical" | "urgent"; card: CareCard; receipts: Receipt[] }
   | { kind: "reply"; text: string; renders: string[]; checkouts: string[]; receipts: Receipt[] };
 
+/**
+ * Earlier user turns that were medical or urgent were refused; they and the reply that
+ * followed are removed before the model sees the conversation, so "ok, tell me anyway"
+ * arrives without the question it would otherwise answer.
+ */
+export function sanitizeHistory(messages: ChatMsg[]): ChatMsg[] {
+  const out: ChatMsg[] = [];
+  for (let i = 0; i < messages.length; i++) {
+    const m = messages[i]!;
+    const isLast = i === messages.length - 1;
+    if (m.role === "user" && !isLast && routeScope(m.content).scope !== "appearance") {
+      if (messages[i + 1]?.role === "assistant") i++;
+      continue;
+    }
+    out.push({ role: m.role, content: m.content.slice(0, 2000) });
+  }
+  return out;
+}
+
 export async function runCompanion(input: CompanionInput, deps: CompanionDeps): Promise<CompanionTurn> {
   const log = new ReceiptLog(deps.now);
   const last = [...input.messages].reverse().find((m) => m.role === "user")?.content ?? "";
@@ -64,7 +83,7 @@ export async function runCompanion(input: CompanionInput, deps: CompanionDeps): 
   const res = await generateText({
     model: deps.model,
     system: systemPrompt(input.likeness, input.plan, input.today),
-    messages: input.messages as ModelMessage[],
+    messages: sanitizeHistory(input.messages) as ModelMessage[],
     tools,
     stopWhen: isStepCount(deps.maxSteps ?? 5),
   });

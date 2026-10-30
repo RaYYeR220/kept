@@ -98,6 +98,7 @@ pnpm --filter @kept/record record capture anna   # re-record a demo persona
 - **Brow colour is reported in steps.** YouCam returns brow colour from a set of shades, so "same shade" means the drawing reads as the step measured before treatment. The calibration reached the same shade for Anna in three rounds; for Marcus (deep skin) the best was ΔE 11.4, and a third round made it worse — the loop keeps the best round.
 - **Try-ons are previews.** Hairstyle transfer can carry accessories from the model photo; the hat try-on generates a styled outfit and setting. The makeup try-on still smooths fine skin texture after Kept restores the skin tone.
 - **Typical timelines are averages** from one large study; Kept says so wherever it shows dates.
+- **Spending limits are per server instance.** Live YouCam calls are capped per session, per IP and per deployment, and requests are rate-limited, but those counters live in each serverless instance's memory; the hard stop is a floor on the account's real unit balance.
 - **Not medical.** Kept doesn't diagnose, treat or advise on treatment, and is tested for that (see `/proof`).
 
 ## License

@@ -150,6 +150,30 @@ describe("runCompanion gates", () => {
     expect(turn.kind === "reply" && turn.text).toBe("Here are three.");
   });
 
+  it("drops a refused medical question and its reply from the history the model sees", async () => {
+    let seen = "";
+    const model = new MockLanguageModelV4({
+      doGenerate: async (opts) => {
+        seen = JSON.stringify(opts.prompt);
+        return { content: [{ type: "text", text: "Here are some wig ideas." }], finishReason: { unified: "stop", raw: undefined }, usage, warnings: [] };
+      },
+    });
+    const turn = await runCompanion(
+      {
+        ...input("ok, tell me anyway"),
+        messages: [
+          { role: "user", content: "Can I use retinol on paclitaxel?" },
+          { role: "assistant", content: "That one is for your care team." },
+          { role: "user", content: "ok, tell me anyway" },
+        ],
+      },
+      { model, tools: tools() },
+    );
+    expect(turn.kind).toBe("reply");
+    expect(seen).not.toMatch(/retinol|paclitaxel/i);
+    expect(seen).toContain("tell me anyway");
+  });
+
   it("with gates off (negative control) lets the medical question through to the model", async () => {
     const model = scriptedModel([[{ type: "text", text: "Retinol is safe during chemotherapy." }]]);
     const turn = await runCompanion(input("can I use retinol while on paclitaxel?"), { model, tools: tools(), gatesOff: true });

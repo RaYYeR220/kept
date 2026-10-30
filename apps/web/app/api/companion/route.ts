@@ -1,10 +1,11 @@
 import { runCompanion, type ChatMsg, type CompanionTools } from "@kept/agent";
-import { LikenessSchema, rankWigs, summarise, type TreatmentPlan } from "@kept/likeness";
+import { LikenessSchema, rankWigs, summarise, TreatmentPlanSchema, type ProductCategory, type TreatmentPlan } from "@kept/likeness";
+import { allow } from "@/lib/server/ratelimit";
 import type { ShopWig } from "@kept/shop";
 import { z } from "zod";
 import { llm, shop, youcamFor } from "@/lib/server/env";
 import { asPersona, replayImage, replayJson, replayKey } from "@/lib/server/replay";
-import { json, sessionId } from "@/lib/server/session";
+import { clientIp, json, parseJson, spendKey } from "@/lib/server/session";
 import { calibrateBrows, renderHat, renderWig } from "@/lib/server/tryon";
 import { colourWords } from "@/lib/server/wigs";
 
@@ -14,18 +15,30 @@ export const maxDuration = 120;
 const Body = z.object({
   messages: z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().max(2000) })).min(1).max(30),
   likeness: LikenessSchema.nullable(),
-  plan: z.object({ firstInfusion: z.string(), cycleDays: z.number().optional(), cycles: z.number().optional() }).nullable(),
+  plan: TreatmentPlanSchema.nullable(),
   mode: z.enum(["live", "replay"]),
-  persona: z.string().optional(),
-  listings: z.array(z.object({ listingId: z.string(), imageUrl: z.string().url(), variantId: z.string(), shopDomain: z.string() })).max(40).default([]),
+  persona: z.string().max(20).optional(),
+  listings: z.array(z.object({ listingId: z.string().max(120), imageUrl: z.string().url().max(500), variantId: z.string().max(120), shopDomain: z.string().max(120) })).max(40).default([]),
 });
 
+/** The listing's own words decide which product rules apply, not the model's guess. */
+function inferCategory(title: string, asked: ProductCategory): ProductCategory {
+  const t = title.toLowerCase();
+  if (/nail|polish|lacquer|manicure|gel kit|acrylic/.test(t)) return "nails";
+  if (/cream|serum|lotion|cleanser|moistur|sunscreen|spf|toner|balm|oil\b|mask|ointment/.test(t)) return "skincare";
+  if (/brow/.test(t)) return "brow";
+  if (/wig\b|wigs\b/.test(t)) return "wig";
+  if (/turban|beanie|scarf|cap\b|hat\b|headwrap|head wrap/.test(t)) return "headwear";
+  return asked === "skincare" || asked === "nails" ? asked : "other";
+}
+
 export async function POST(req: Request) {
+  if (!allow(`companion:${await clientIp()}`, 20, 10 * 60_000)) return json({ error: "Too many messages for now. Please wait a few minutes." }, 429);
   const form = await req.formData();
-  const parsed = Body.safeParse(JSON.parse(String(form.get("body") ?? "{}")));
+  const parsed = Body.safeParse(parseJson(form.get("body")));
   if (!parsed.success) return json({ error: "Bad request." }, 400);
   const b = parsed.data;
-  const sid = await sessionId();
+  const sid = await spendKey();
   const persona = asPersona(b.persona);
   const photo = async (name: string) => {
     const f = form.get(name);
@@ -42,7 +55,8 @@ export async function POST(req: Request) {
   };
 
   const today_ = new Date().toISOString().slice(0, 10);
-  const inTreatment = Boolean(b.plan && b.plan.firstInfusion <= today_);
+  // Without dates, assume treatment may have started: the stricter product rules apply.
+  const inTreatment = !b.plan || b.plan.firstInfusion <= today_;
   const hair = b.likeness?.hair;
 
   const tools: CompanionTools = {
@@ -50,8 +64,8 @@ export async function POST(req: Request) {
       const wigs = await shop.searchWigs({ colourWords: q.colourFamily ? [q.colourFamily] : colourWords(hair?.color?.value.name ?? null), texture: q.texture ?? hair?.type?.value.term ?? null, medical: q.medical });
       const within = q.maxPriceMinor === null ? wigs : wigs.filter((w) => w.priceMinor !== null && w.priceMinor <= q.maxPriceMinor!);
       for (const w of within) known.set(w.listingId, { listingId: w.listingId, imageUrl: w.imageUrl, variantId: w.variantId, shopDomain: w.shopDomain });
-      const target = { hex: hair?.color?.value.hex ?? "#000000", texture: hair?.type?.value.term ?? null, lengthIn: null };
-      return rankWigs(target, within as ShopWig[]);
+      if (!hair?.color) return within.map((w) => ({ ...w, deltaE: null, band: "unmeasured" as const, textureMatch: null, reasons: ["No measured hair colour to compare with yet"] }));
+      return rankWigs({ hex: hair.color.value.hex, texture: hair.type?.value.term ?? null, lengthIn: null }, within as ShopWig[]);
     },
     async tryOnWig(listingId) {
       const l = known.get(listingId);
@@ -90,7 +104,7 @@ export async function POST(req: Request) {
         return {
           listingId: p.id,
           title: p.title,
-          category: q.category,
+          category: inferCategory(p.title, q.category),
           ingredients: q.category === "skincare" ? inci : null,
           attributes: [],
           priceMinor: p.variants?.[0]?.price?.amount ?? null,
@@ -114,6 +128,7 @@ export async function POST(req: Request) {
     );
     return json({ turn, renders, listings: [...known.values()] });
   } catch (e) {
-    return json({ error: (e as Error).message }, 503);
+    console.error("companion failed", e);
+    return json({ error: "The Companion isn't available right now." }, 503);
   }
 }

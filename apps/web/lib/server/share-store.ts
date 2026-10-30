@@ -18,6 +18,7 @@ export type BlobBackend = {
   put(path: string, body: Uint8Array): Promise<void>;
   get(path: string): Promise<Uint8Array | null>;
   del(paths: string[]): Promise<void>;
+  list(prefix: string): Promise<string[]>;
 };
 
 export class ShareStore {
@@ -76,11 +77,27 @@ export class ShareStore {
     const s = await this.raw(token);
     if (!s) return;
     await this.blobs.del([`shares/${token}/photo`, `shares/${token}/inventory`]);
-    await this.putJson(`shares/${token}/share`, { ...s, revoked: true, photoShared: false, summary: { ...s.summary } });
+    // Only a tombstone remains: no measurements, no label.
+    const tomb = { token, createdAt: s.createdAt, expiresAt: s.expiresAt, revoked: true, photoShared: false, label: null, summary: null };
+    await this.putJson(`shares/${token}/share`, tomb);
   }
 
   private async purge(token: string) {
     await this.blobs.del([`shares/${token}/photo`, `shares/${token}/inventory`]);
+  }
+
+  /** Deletes the photo and inventory of every expired share. Run on a schedule. */
+  async sweep(): Promise<{ checked: number; purged: number }> {
+    const tokens = [...new Set((await this.blobs.list("shares/")).map((p) => p.split("/")[1]).filter((t): t is string => Boolean(t)))];
+    let purged = 0;
+    for (const t of tokens) {
+      const s = await this.raw(t);
+      if (!s || s.revoked || Date.parse(s.expiresAt) <= this.now().getTime()) {
+        await this.purge(t);
+        purged++;
+      }
+    }
+    return { checked: tokens.length, purged };
   }
 
   async addInventory(token: string, items: Omit<InventoryItem, "id" | "addedAt">[]): Promise<InventoryItem[]> {
@@ -106,6 +123,7 @@ export function memoryBlobs(): BlobBackend & { paths(): string[] } {
     put: async (p, b) => void m.set(p, b),
     get: async (p) => m.get(p) ?? null,
     del: async (ps) => ps.forEach((p) => m.delete(p)),
+    list: async (prefix) => [...m.keys()].filter((k) => k.startsWith(prefix)),
     paths: () => [...m.keys()],
   };
 }
