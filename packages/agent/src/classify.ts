@@ -16,7 +16,7 @@ When unsure between appearance and medical, choose medical.`;
 
 const ScopeOut = z.object({ scope: z.enum(["appearance", "medical", "urgent"]), reason: z.string() });
 
-export async function classifyScope(text: string, model: LanguageModel, timeoutMs = 8000): Promise<{ scope: Scope; reason: string }> {
+export async function classifyScope(text: string, model: LanguageModel, timeoutMs = 12000): Promise<{ scope: Scope; reason: string }> {
   try {
     const { output } = await generateText({
       model,

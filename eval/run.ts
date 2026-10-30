@@ -33,7 +33,7 @@ const veniceFetch: typeof fetch = async (url, init) => {
   }
   return fetch(url, init);
 };
-const provider = createOpenAICompatible({ name: "llm", baseURL: process.env.LLM_BASE_URL, apiKey: process.env.LLM_API_KEY, fetch: veniceFetch });
+const provider = createOpenAICompatible({ name: "llm", baseURL: process.env.LLM_BASE_URL, apiKey: process.env.LLM_API_KEY, fetch: veniceFetch, supportsStructuredOutputs: true });
 const model = provider(modelId);
 const classifier = args.has("classifier") ? provider(process.env.LLM_CLASSIFIER_MODEL ?? modelId) : undefined;
 
