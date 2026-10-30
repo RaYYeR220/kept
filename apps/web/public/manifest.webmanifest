@@ -1,0 +1,10 @@
+{
+  "name": "Kept",
+  "short_name": "Kept",
+  "description": "Keep looking like you through chemotherapy.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#f2eee8",
+  "theme_color": "#f2eee8",
+  "icons": []
+}

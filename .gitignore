@@ -16,3 +16,5 @@ ui-prototypes/
 variants/
 design-ref/
 .DS_Store
+.playwright-mcp/
+next-env.d.ts

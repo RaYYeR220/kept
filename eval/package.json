@@ -1,0 +1,20 @@
+{
+  "name": "@kept/eval",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "eval": "tsx run.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^3",
+    "@kept/agent": "workspace:^",
+    "@kept/likeness": "workspace:^",
+    "@kept/shop": "workspace:^",
+    "@kept/youcam": "workspace:^",
+    "ai": "^7"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

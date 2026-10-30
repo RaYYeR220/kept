@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --color-oat-50: #f8f5f0;
+  --color-oat-100: #f2eee8;
+  --color-oat-200: #e9e3da;
+  --color-oat-300: #dbd2c6;
+  --color-oat-400: #bbae9f;
+  --color-oat-500: #8c8279;
+  --color-oat-600: #655d55;
+  --color-oat-700: #463f39;
+  --color-oat-800: #2c2621;
+  --color-oat-900: #1c1814;
+  --color-hair: #5b3a29;
+  --color-hair-deep: #3a2418;
+  --color-hair-mid: #8a5a3c;
+  --color-hair-light: #b98a62;
+  --color-ok: #4f6b4a;
+  --color-caution: #9a6a1f;
+  --color-block: #8e3b2e;
+
+  --font-display: var(--font-outfit), system-ui, sans-serif;
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+
+  --radius-chip: 999px;
+  --radius-card: 28px;
+  --radius-sheet: 36px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  --ground: var(--color-oat-100);
+  --ink: var(--color-oat-900);
+  --ink-2: var(--color-oat-600);
+  --ink-3: var(--color-oat-500);
+  --line: rgb(28 24 20 / 0.1);
+  --line-soft: rgb(28 24 20 / 0.045);
+}
+
+html {
+  background: var(--ground);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+/* Texture floor: tinted ground + radial pools + 1px column grid + grain. */
+.tex-pools {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 42% 55% at 80% 38%, rgb(185 138 98 / 0.2), transparent 70%),
+    radial-gradient(ellipse 38% 40% at 6% 96%, rgb(140 120 96 / 0.13), transparent 70%),
+    radial-gradient(ellipse 30% 28% at 34% 6%, rgb(255 255 255 / 0.55), transparent 70%);
+}
+.tex-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, var(--line-soft) 0 1px, transparent 1px 80px);
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 45%, #000 40%, transparent 100%);
+}
+.tex-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.94;
+}
+
+@keyframes wipe {
+  from { clip-path: inset(0 100% 0 0); transform: translateX(-10px); }
+  to { clip-path: inset(0 0 0 0); transform: none; }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes breathe {
+  50% { transform: scale(1.03); }
+}
+.anim-wipe { animation: wipe 0.9s var(--ease-out-soft) both; }
+.anim-rise { animation: rise 0.9s var(--ease-out-soft) both; }
+
+/* Content never stays invisible if an animation is skipped. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.hairline { border-color: var(--line); }
+
+:focus-visible {
+  outline: 2px solid var(--color-hair);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
