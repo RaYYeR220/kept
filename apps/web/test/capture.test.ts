@@ -48,7 +48,7 @@ const opts = {
   newId: () => "lk1",
 };
 const jpeg = new Uint8Array(await sharp({ create: { width: 400, height: 400, channels: 3, background: "#c99d7f" } }).jpeg().toBuffer());
-const photos = { front: jpeg, right: new Uint8Array([2]), left: new Uint8Array([3]) };
+const photos = { front: jpeg, right: new Uint8Array([2]), left: new Uint8Array([3]), top: new Uint8Array([4]) };
 
 async function collect(gen: AsyncGenerator<CaptureEvent>) {
   const out: CaptureEvent[] = [];

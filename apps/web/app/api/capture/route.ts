@@ -56,7 +56,7 @@ export async function POST(req: Request) {
   try {
     const front = await bytes(form.get("front"));
     if (!front) return json({ error: "A front photo is required." }, 400);
-    photos = { front, right: await bytes(form.get("right")), left: await bytes(form.get("left")) };
+    photos = { front, right: await bytes(form.get("right")), left: await bytes(form.get("left")), top: await bytes(form.get("top")) };
   } catch (e) {
     return json({ error: (e as Error).message }, 413);
   }

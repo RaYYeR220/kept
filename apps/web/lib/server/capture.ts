@@ -16,7 +16,8 @@ import {
 import { isComplete, type Likeness, type Provenance } from "@kept/likeness";
 import { cropToFace } from "./crop";
 
-export type CapturePhotos = { front: Uint8Array; right?: Uint8Array; left?: Uint8Array };
+/** front: head and shoulders · right/left: three-quarter turns · top: looking down at the parting. */
+export type CapturePhotos = { front: Uint8Array; right?: Uint8Array; left?: Uint8Array; top?: Uint8Array };
 
 export type CaptureOptions = {
   sessionId: string;
@@ -58,7 +59,7 @@ function channel<T>() {
 
 export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: CaptureOptions): AsyncGenerator<CaptureEvent> {
   const now = opts.now ?? (() => new Date().toISOString());
-  const ids: Record<"front" | "right" | "left" | "face", string | null> = { front: null, right: null, left: null, face: null };
+  const ids: Record<"front" | "right" | "left" | "face" | "top", string | null> = { front: null, right: null, left: null, face: null, top: null };
   ids.front = (await yc.upload(photos.front, "image/jpeg", "front.jpg")).fileId;
   const preTaskIds: string[] = [];
 
@@ -72,6 +73,7 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
   } else {
     ids.face = (await yc.upload(await cropToFace(photos.front, box), "image/jpeg", "face.jpg")).fileId;
   }
+  if (photos.top) ids.top = (await yc.upload(photos.top, "image/jpeg", "top.jpg")).fileId;
   if (photos.right && photos.left) {
     ids.right = (await yc.upload(photos.right, "image/jpeg", "right.jpg")).fileId;
     ids.left = (await yc.upload(photos.left, "image/jpeg", "left.jpg")).fileId;
@@ -86,8 +88,9 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
         ]
       : []),
     { key: "hairLength", feature: "hairLength", body: { src_file_id: ids.front } },
-    { key: "hairDensity", feature: "hairDensity", body: { src_file_id: ids.front } },
   ];
+  // Density is read from above, looking at the parting.
+  if (ids.top) jobs.push({ key: "hairDensity", feature: "hairDensity", body: { src_file_id: ids.top } });
   if (ids.right && ids.left) jobs.push({ key: "hairType", feature: "hairType", body: { src_file_ids: [ids.front, ids.right, ids.left] } });
   if (opts.fitzpatrick && ids.face) jobs.push({ key: "fitzpatrick", feature: "fitzpatrick", body: { src_file_id: ids.face, version: "1.0" } });
   if (opts.skinBaseline && ids.face) jobs.push({ key: "skinAnalysis", feature: "skinAnalysis", body: { src_file_id: ids.face, dst_actions: [...SKIN_CONCERNS], format: "json" } });

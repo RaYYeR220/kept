@@ -13,6 +13,7 @@ const SLOTS: Array<{ slot: Exclude<PhotoSlot, "today">; title: string; hint: str
   { slot: "front", title: "Straight on", hint: "Face the light, hair down as you usually wear it, shoulders in the frame." },
   { slot: "right", title: "Turn a little right", hint: "Same light, head turned about a third of the way." },
   { slot: "left", title: "Turn a little left", hint: "Same again, the other way." },
+  { slot: "top", title: "Your parting", hint: "Bow your head and photograph the top, so the parting shows." },
 ];
 
 const STEP_API: Record<string, string> = {
@@ -29,7 +30,7 @@ const STEP_WHAT: Record<string, string> = {
   faceAttr: "brow shape and thickness, face shape",
   hairType: "curl pattern from three angles",
   hairLength: "length",
-  hairDensity: "density",
+  hairDensity: "density, from the parting",
   fitzpatrick: "skin type",
   skinAnalysis: "skin baseline",
 };
@@ -105,14 +106,14 @@ export default function Capture() {
   }
 
   if (!settings) return null;
-  const ready = Boolean(photos.front && (demo || (photos.right && photos.left)));
+  const ready = Boolean(photos.front && (demo || (photos.right && photos.left && photos.top)));
 
   return (
     <>
-      <Title sub={demo ? "Anna is a synthetic person. These three photos were generated for the demo; her measurements replay real recorded YouCam results." : "Three photos in the same light. They stay on this phone; YouCam measures them and Kept deletes them there straight after."}>
-        {demo ? "Anna's three photos" : "Three photos"}
+      <Title sub={demo ? "Anna is a synthetic person. These four photos were generated for the demo; her measurements replay real recorded YouCam results." : "Four photos in the same light. They stay on this phone; YouCam measures them and Kept deletes them there straight after."}>
+        {demo ? "Anna's four photos" : "Four photos"}
       </Title>
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-2 gap-2.5">
         {SLOTS.map(({ slot, title, hint }) => (
           <label key={slot} className={`group relative block aspect-[3/4] overflow-hidden rounded-[22px] border border-[var(--line)] bg-oat-50/70 ${demo ? "" : "cursor-pointer"}`}>
             {urls[slot] ? (

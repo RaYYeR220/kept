@@ -7,7 +7,7 @@ import type { Likeness, TreatmentPlan } from "@kept/likeness";
 // receipts. The server only sees a photo for the seconds it takes to measure it.
 
 export type Mode = "live" | "replay";
-export type PhotoSlot = "front" | "right" | "left" | "today";
+export type PhotoSlot = "front" | "right" | "left" | "top" | "today";
 
 export type Settings = {
   id: "me";

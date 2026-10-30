@@ -23,7 +23,7 @@ const asReplay = (l: Likeness): Likeness => JSON.parse(JSON.stringify(l).replace
 
 if (cmd === "capture") {
   const events: CaptureEvent[] = [];
-  for await (const ev of captureLikeness(yc, { front: photo("front"), right: photo("right"), left: photo("left") }, {
+  for await (const ev of captureLikeness(yc, { front: photo("front"), right: photo("right"), left: photo("left"), top: photo("top") }, {
     sessionId: "record",
     consentAt: at(),
     consentVersion: "2026-10-30",

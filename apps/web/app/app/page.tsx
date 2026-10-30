@@ -18,7 +18,7 @@ export default function AppHome() {
   if (!stored) {
     return (
       <>
-        <Title sub="Three photos, about a minute. Best done before your first infusion, while your hair and brows are as you know them.">Save your likeness</Title>
+        <Title sub="Four photos, about a minute. Best done before your first infusion, while your hair and brows are as you know them.">Save your likeness</Title>
         <LinkButton href="/app/capture" className="w-full">Start measuring</LinkButton>
       </>
     );

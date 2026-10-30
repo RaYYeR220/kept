@@ -7,7 +7,7 @@ const STEPS = [
   {
     verb: "Measure",
     title: "Measure while it's still yours",
-    body: "Three photos, about a minute. YouCam's skin-tone, face-attribute and hair APIs read your hair colour, curl, density and length, your brow colour and shape, and your skin tone.",
+    body: "Four photos, about a minute. YouCam's skin-tone, face-attribute and hair APIs read your hair colour, curl, density and length, your brow colour and shape, and your skin tone.",
     api: "YouCam Skin Tone · Face Analyzer · Hair Type, Length, Density",
   },
   {
