@@ -3,6 +3,7 @@ import { parseFaceAttr, parseFaceBoxes, parseResultUrl, type FeatureKey, type Yo
 import sharp from "sharp";
 import { undoRetouch } from "./composite";
 import { cropToFace } from "./crop";
+import { fetchShopImage, isShopImage } from "./urls";
 
 const PATTERNS = "https://plugins-media.makeupar.com/wcm-saas/patterns";
 const catalogue = new Map<string, Promise<Array<{ category: string; label: string }>>>();
@@ -69,14 +70,14 @@ async function asJpeg1024(bytes: Uint8Array): Promise<Uint8Array> {
 }
 
 export async function renderWig(yc: YouCam, photo: Uint8Array, refUrl: string, sessionId: string) {
-  const res = await fetch(refUrl);
-  if (!res.ok) throw new Error(`Couldn't load the product photo (${res.status}).`);
-  const ref = await yc.upload(await asJpeg1024(new Uint8Array(await res.arrayBuffer())), "image/jpeg", "ref.jpg");
+  const ref = await yc.upload(await asJpeg1024(await fetchShopImage(refUrl)), "image/jpeg", "ref.jpg");
   return imageTask(yc, await asJpeg1024(photo), "hairTransfer", { ref_file_id: ref.fileId, hair_color: "ref" }, sessionId);
 }
 
-export const renderHat = (yc: YouCam, photo: Uint8Array, refUrl: string, gender: "female" | "male", sessionId: string) =>
-  imageTask(yc, photo, "hat", { ref_file_url: refUrl, gender }, sessionId);
+export async function renderHat(yc: YouCam, photo: Uint8Array, refUrl: string, gender: "female" | "male", sessionId: string) {
+  if (!isShopImage(refUrl)) throw new Error("Only Shopify product photos can be used.");
+  return imageTask(yc, photo, "hat", { ref_file_url: refUrl, gender }, sessionId);
+}
 
 /**
  * Closes the loop on a brow render: YouCam's Face Analyzer reads the brow colour on the

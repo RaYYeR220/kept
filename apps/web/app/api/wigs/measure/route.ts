@@ -2,11 +2,12 @@ import { z } from "zod";
 import { liveAvailable, youcamLive } from "@/lib/server/env";
 import { sampleHair, type HairSample } from "@/lib/server/sample";
 import { json, sessionId } from "@/lib/server/session";
+import { fetchShopImage, isShopImage } from "@/lib/server/urls";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const Body = z.object({ listings: z.array(z.object({ listingId: z.string(), imageUrl: z.string().url() })).min(1).max(10) });
+const Body = z.object({ listings: z.array(z.object({ listingId: z.string().max(120), imageUrl: z.string().url().refine(isShopImage, "Shopify photos only") })).min(1).max(10) });
 
 // Derived readings only (a colour per image URL), never the images themselves.
 const cache = new Map<string, { sample: HairSample | null; at: string }>();
@@ -28,9 +29,7 @@ export async function POST(req: Request) {
       try {
         let hit = cache.get(l.imageUrl);
         if (!hit) {
-          const res = await fetch(l.imageUrl);
-          if (!res.ok) throw new Error(String(res.status));
-          hit = { sample: await sampleHair(yc, new Uint8Array(await res.arrayBuffer()), sid, true), at: new Date().toISOString() };
+          hit = { sample: await sampleHair(yc, await fetchShopImage(l.imageUrl), sid, true), at: new Date().toISOString() };
           cache.set(l.imageUrl, hit);
         }
         results[l.listingId] = hit.sample ? { hex: hit.sample.hex, name: hit.sample.name, at: hit.at } : null;
