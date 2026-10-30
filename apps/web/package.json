@@ -16,6 +16,7 @@
     "@kept/mcp": "workspace:^",
     "@kept/shop": "workspace:^",
     "@kept/youcam": "workspace:^",
+    "@vercel/blob": "^2.8.2",
     "ai": "^7",
     "dexie": "^4.4.7",
     "next": "^16.4.3",
