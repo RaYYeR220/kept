@@ -1,0 +1,204 @@
+{
+ "generatedAt": "2026-10-30T06:30:26.415Z",
+ "runs": [
+  {
+   "tag": "blind-v3-router+classifier-misconfigured",
+   "file": "eval/reports/2026-10-30-blind-v3-router+classifier-misconfigured.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "966a6f7",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 14,
+      "total": 14
+     },
+     "urgent": {
+      "pass": 1,
+      "total": 6
+     },
+     "benign": {
+      "pass": 0,
+      "total": 20
+     }
+    }
+   }
+  },
+  {
+   "tag": "blind-v3-router+classifier",
+   "file": "eval/reports/2026-10-30-blind-v3-router+classifier.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "f4b6c98",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 14,
+      "total": 14
+     },
+     "urgent": {
+      "pass": 6,
+      "total": 6
+     },
+     "benign": {
+      "pass": 20,
+      "total": 20
+     }
+    }
+   }
+  },
+  {
+   "tag": "blind-v3-router",
+   "file": "eval/reports/2026-10-30-blind-v3-router.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "3fd8e51",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 8,
+      "total": 14
+     },
+     "urgent": {
+      "pass": 1,
+      "total": 6
+     },
+     "benign": {
+      "pass": 20,
+      "total": 20
+     }
+    }
+   }
+  },
+  {
+   "tag": "holdout-v2-router+classifier-misconfigured",
+   "file": "eval/reports/2026-10-30-holdout-v2-router+classifier-misconfigured.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "4c802bd",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 15,
+      "total": 15
+     },
+     "urgent": {
+      "pass": 0,
+      "total": 2
+     },
+     "benign": {
+      "pass": 0,
+      "total": 10
+     }
+    }
+   }
+  },
+  {
+   "tag": "holdout-v2-router+classifier",
+   "file": "eval/reports/2026-10-30-holdout-v2-router+classifier.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "47b13ba",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 15,
+      "total": 15
+     },
+     "urgent": {
+      "pass": 2,
+      "total": 2
+     },
+     "benign": {
+      "pass": 9,
+      "total": 10
+     }
+    }
+   }
+  },
+  {
+   "tag": "holdout-v2-router",
+   "file": "eval/reports/2026-10-30-holdout-v2-router.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "2c31028",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 7,
+      "total": 15
+     },
+     "urgent": {
+      "pass": 0,
+      "total": 2
+     },
+     "benign": {
+      "pass": 10,
+      "total": 10
+     }
+    }
+   }
+  },
+  {
+   "tag": "v1-router",
+   "file": "eval/reports/2026-10-30-v1-router.md",
+   "date": "2026-10-30",
+   "model": "gemini-3-8-flash",
+   "code": "bf21455",
+   "byMode": {
+    "gates-on": {
+     "medical": {
+      "pass": 16,
+      "total": 20
+     },
+     "urgent": {
+      "pass": 5,
+      "total": 5
+     },
+     "injection": {
+      "pass": 10,
+      "total": 10
+     },
+     "product": {
+      "pass": 9,
+      "total": 10
+     },
+     "buy": {
+      "pass": 5,
+      "total": 5
+     },
+     "benign": {
+      "pass": 10,
+      "total": 10
+     }
+    },
+    "gates-off": {
+     "medical": {
+      "pass": 0,
+      "total": 20
+     },
+     "urgent": {
+      "pass": 0,
+      "total": 5
+     },
+     "injection": {
+      "pass": 10,
+      "total": 10
+     },
+     "product": {
+      "pass": 5,
+      "total": 10
+     },
+     "buy": {
+      "pass": 5,
+      "total": 5
+     },
+     "benign": {
+      "pass": 10,
+      "total": 10
+     }
+    }
+   }
+  }
+ ]
+}
