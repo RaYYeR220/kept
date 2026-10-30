@@ -35,7 +35,11 @@ importers:
 
   packages/mcp: {}
 
-  packages/shop: {}
+  packages/shop:
+    dependencies:
+      '@kept/likeness':
+        specifier: workspace:^
+        version: link:../likeness
 
   packages/youcam: {}
 
