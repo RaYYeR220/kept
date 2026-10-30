@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
-import type { RankedWig } from "@kept/likeness";
+import { rankWigs, type RankedWig } from "@kept/likeness";
 import type { ShopWig } from "@kept/shop";
 import { Before } from "@/components/app/Before";
 import { Button, Card, Note, Swatch, Title } from "@/components/app/ui";
@@ -10,7 +10,7 @@ import { postForm } from "@/lib/client/api";
 import { db, getSettings } from "@/lib/client/db";
 import { b64ToBlob, toJpeg } from "@/lib/client/images";
 
-type Wig = RankedWig & ShopWig;
+type Wig = RankedWig & ShopWig & { sampledName?: string; recordedTryOn?: boolean };
 const BAND_LABEL: Record<RankedWig["band"], string> = { close: "Close to your colour", near: "Near your colour", far: "Different colour", unmeasured: "Colour not measured" };
 const money = (minor: number | null, cur: string | null) => (minor === null ? "" : new Intl.NumberFormat("en-US", { style: "currency", currency: cur ?? "USD" }).format(minor / 100));
 
@@ -19,6 +19,7 @@ export default function HairPage() {
   const stored = useLiveQuery(() => db.likeness.get("current"), []);
   const [wigs, setWigs] = useState<Wig[] | null>(null);
   const [medical, setMedical] = useState(true);
+  const [measuring, setMeasuring] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [renders, setRenders] = useState<Record<string, string>>({});
@@ -32,8 +33,24 @@ export default function HairPage() {
     const q = new URLSearchParams({ family: hair.color?.value.name ?? "", hex: hair.color?.value.hex ?? "", texture: hair.type?.value.term ?? "", medical: medical ? "1" : "0", mode: settings.mode, persona: settings.persona });
     const res = await fetch(`/api/wigs?${q}`);
     const body = await res.json();
-    if (!res.ok) setError(body.error);
-    else setWigs(body.wigs);
+    if (!res.ok) return setError(body.error);
+    const found = body.wigs as Wig[];
+    setWigs(found);
+    // Read each listing photo's hair shade (free), then rank against the person's own.
+    setMeasuring(true);
+    try {
+      const top = found.slice(0, 10);
+      const m = await fetch("/api/wigs/measure", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ listings: top.map((w) => ({ listingId: w.listingId, imageUrl: w.imageUrl })) }) });
+      const { results } = (await m.json()) as { results?: Record<string, { hex: string; name: string; at: string } | null> };
+      if (!results || !hair?.color) return;
+      const measured = found.map((w) => {
+        const r = results[w.listingId];
+        return r ? { ...w, sampledName: r.name, measured: { value: { hex: r.hex }, prov: { api: "kept-hair-sampler", version: "1.0", taskId: null, units: 0, at: r.at, source: "live" as const } } } : w;
+      });
+      setWigs(rankWigs({ hex: hair.color.value.hex, texture: hair.type?.value.term ?? null, lengthIn: null }, measured) as Wig[]);
+    } finally {
+      setMeasuring(false);
+    }
   }
 
   useEffect(() => {
@@ -50,6 +67,7 @@ export default function HairPage() {
       form.set("mode", settings.mode);
       form.set("persona", settings.persona);
       form.set("ref", w.imageUrl);
+      form.set("listing", w.listingId);
       if (settings.mode === "live") {
         const front = await db.photos.get("front");
         if (!front) throw new Error("Your before photo is missing — measure your likeness first.");
@@ -90,7 +108,7 @@ export default function HairPage() {
         <div className="flex items-center gap-3 pb-4">
           {hair.color && <Swatch hex={hair.color.value.hex} kind="hair" size={44} />}
           <div className="text-[15px] leading-snug text-[var(--ink-2)]">
-            <b className="block font-display text-[19px] font-medium text-[var(--ink)]">{hair.color?.value.name ?? "Your"} family{hair.type ? ` · ${hair.type.value.mapping ?? hair.type.value.term}` : ""}</b>
+            <b className="block font-display text-[19px] font-medium text-[var(--ink)]">{hair.color?.value.name ?? "Your hair"}{hair.type ? ` · ${hair.type.value.mapping ?? hair.type.value.term}` : ""}</b>
             {hair.length ? `${hair.length.value.term}` : ""}
             {hair.density ? ` · ${hair.density.value.term.toLowerCase()}` : ""}
           </div>
@@ -104,6 +122,7 @@ export default function HairPage() {
       </div>
 
       {wigs === null && !error && <Note>Searching the Shop catalogue…</Note>}
+      {measuring && <Note>Reading the hair colour on each listing photo…</Note>}
       {error && <Note>{error}</Note>}
 
       <ul className="mt-2">
@@ -113,13 +132,14 @@ export default function HairPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={w.imageUrl} alt="" className="h-28 w-24 flex-none rounded-[18px] object-cover" referrerPolicy="no-referrer" />
               <div className="min-w-0 flex-1">
+                {w.recordedTryOn && <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-hair">Recorded try-on in the demo</p>}
                 <p className="line-clamp-2 text-[15px] font-semibold leading-snug">{w.title}</p>
                 <p className="mt-1 text-[13px] text-[var(--ink-3)]">{w.sellerName} · {money(w.priceMinor, w.currency)}</p>
                 <p className={`mt-2 inline-block rounded-chip px-2.5 py-1 text-[12px] font-semibold ${w.band === "close" ? "bg-ok/15 text-ok" : w.band === "unmeasured" ? "bg-oat-200 text-[var(--ink-2)]" : "bg-caution/15 text-caution"}`}>
                   {BAND_LABEL[w.band]}
                   {w.deltaE !== null ? ` · ΔE ${w.deltaE.toFixed(1)}` : ""}
                 </p>
-                {w.colourName && <p className="mt-1 text-[12px] text-[var(--ink-3)]">Listed as “{w.colourName}”{w.texture ? ` · ${w.texture}` : ""}</p>}
+                {w.colourName && <p className="mt-1 text-[12px] text-[var(--ink-3)]">Listed as “{w.colourName}”{w.sampledName ? ` · reads as ${w.sampledName.toLowerCase()}` : ""}{w.texture ? ` · ${w.texture}` : ""}</p>}
               </div>
             </div>
             {renders[w.listingId] && <Before before={null} after={renders[w.listingId]!} afterLabel="On you" />}

@@ -3,9 +3,9 @@ import { LikenessSchema, rankWigs, summarise, type TreatmentPlan } from "@kept/l
 import type { ShopWig } from "@kept/shop";
 import { z } from "zod";
 import { llm, shop, youcamFor } from "@/lib/server/env";
-import { asPersona, replayImage, replayJson } from "@/lib/server/replay";
+import { asPersona, replayImage, replayJson, replayKey } from "@/lib/server/replay";
 import { json, sessionId } from "@/lib/server/session";
-import { renderBrows, renderHat, renderWig } from "@/lib/server/tryon";
+import { calibrateBrows, renderHat, renderWig } from "@/lib/server/tryon";
 import { colourWords } from "@/lib/server/wigs";
 
 export const runtime = "nodejs";
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     async tryOnWig(listingId) {
       const l = known.get(listingId);
       if (!l) throw new Error("Unknown listing");
-      if (b.mode === "replay") return { renderId: keep(`wig-${listingId.slice(-12)}`, replayImage(persona, `wig-${listingId.replace(/[^a-z0-9]/gi, "").slice(-12)}`) ?? replayImage(persona, "wig")), units: 0 };
+      if (b.mode === "replay") return { renderId: keep(replayKey("wig", listingId), replayImage(persona, replayKey("wig", listingId))), units: 0 };
       if (!before) throw new Error("No before photo");
       const r = await renderWig(youcamFor("live", sid), before, l.imageUrl, sid);
       return { renderId: keep(`wig-${r.taskId}`, r.image), units: r.units };
@@ -65,12 +65,12 @@ export async function POST(req: Request) {
       const brows = b.likeness?.brows;
       if (!brows?.color) throw new Error("No measured brows");
       if (b.mode === "replay") {
-        const meta = replayJson<{ deltaE?: number }>(persona, "verify-brows");
+        const meta = replayJson<{ deltaE?: number }>(persona, "brows");
         return { renderId: keep("brows", replayImage(persona, "brows")), units: 0, reMeasuredDeltaE: meta?.deltaE ?? null };
       }
       if (!today) throw new Error("No photo for today");
-      const r = await renderBrows(youcamFor("live", sid), today, { hex: brows.color.value.hex, shape: brows.shape?.value ?? null }, sid);
-      return { renderId: keep(`brows-${r.taskId}`, r.image), units: r.units, reMeasuredDeltaE: null };
+      const c = await calibrateBrows(youcamFor("live", sid), today, { hex: brows.color.value.hex, shape: brows.shape?.value ?? null }, sid);
+      return { renderId: keep(`brows-${Date.now()}`, c.best.image), units: c.units, reMeasuredDeltaE: c.best.deltaE };
     },
     async tryHeadwear(listingId) {
       const l = known.get(listingId);

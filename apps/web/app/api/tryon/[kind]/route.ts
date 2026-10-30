@@ -1,6 +1,6 @@
 import { BudgetError, YouCamHttpError, YouCamTaskError } from "@kept/youcam";
 import { youcamFor } from "@/lib/server/env";
-import { asPersona, replayImage, replayJson } from "@/lib/server/replay";
+import { asPersona, replayImage, replayJson, replayKey } from "@/lib/server/replay";
 import { json, sessionId } from "@/lib/server/session";
 import { calibrateBrows, renderBrows, renderHat, renderWig, verifyBrows } from "@/lib/server/tryon";
 
@@ -29,7 +29,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ kind: string }
 
   if (form.get("mode") !== "live") {
     const persona = asPersona(form.get("persona"));
-    const key = `${kind}${form.get("ref") ? `-${String(form.get("ref")).replace(/[^a-z0-9]/gi, "").slice(-12)}` : ""}`;
+    const key = kind === "wig" ? replayKey("wig", form.get("listing") ? String(form.get("listing")) : null) : kind;
     const meta = replayJson<Record<string, unknown>>(persona, key);
     const image = replayImage(persona, key);
     if (!meta) return json({ error: "No recording for this try-on in the demo." }, 404);

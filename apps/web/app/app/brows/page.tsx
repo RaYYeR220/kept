@@ -8,7 +8,8 @@ import { postForm } from "@/lib/client/api";
 import { db, getSettings } from "@/lib/client/db";
 import { b64ToBlob, demoPhoto, toJpeg } from "@/lib/client/images";
 
-type Verify = { measuredHex: string | null; deltaE: number | null; units?: number; source: string };
+type Round = { round: number; inputHex: string; strength?: string; measuredHex: string | null; deltaE: number | null; units: number };
+type Verify = { measuredHex: string | null; deltaE: number | null; units?: number; source: string; rounds?: Round[] };
 
 export default function BrowsPage() {
   const settings = useLiveQuery(getSettings, []);
@@ -18,7 +19,7 @@ export default function BrowsPage() {
   const [todayUrl, setTodayUrl] = useState<string | null>(null);
   const [renderUrl, setRenderUrl] = useState<string | null>(null);
   const [verify, setVerify] = useState<Verify | null>(null);
-  const [busy, setBusy] = useState<"render" | "verify" | null>(null);
+  const [busy, setBusy] = useState<"render" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const brows = stored?.likeness.brows;
   const demo = settings?.mode !== "live";
@@ -59,7 +60,7 @@ export default function BrowsPage() {
     setError(null);
     setVerify(null);
     try {
-      const extra: Record<string, string | Blob> = {};
+      const extra: Record<string, string | Blob> = { calibrate: "1" };
       if (brows.shape) {
         extra.browShape = brows.shape.value.shape;
         extra.browThickness = brows.shape.value.thickness;
@@ -68,27 +69,13 @@ export default function BrowsPage() {
         if (!todayPhoto) throw new Error("Add a photo of today first.");
         extra.photo = await toJpeg(todayPhoto.blob, 1600);
       }
-      const r = await postForm<{ image: string | null; units?: number; source: string; pattern?: { name: string } }>("/api/tryon/brows", await form(extra));
+      const r = await postForm<{ image: string | null; units?: number; source: string; pattern?: { name: string }; rounds?: Round[]; deltaE?: number | null; measuredHex?: string | null }>("/api/tryon/brows", await form(extra));
       if (!r.image) throw new Error("No recorded render in the demo.");
       const blob = b64ToBlob(r.image);
-      await db.renders.put({ id: "brows", kind: "brows", blob, label: "Brows and lashes", createdAt: new Date().toISOString(), meta: { source: r.source, pattern: r.pattern ?? null } });
-      await db.receipts.add({ at: new Date().toISOString(), kind: "tool", name: "YouCam Makeup VTO", status: "ok", detail: `brows ${brows.color.value.hex}${r.pattern ? `, pattern ${r.pattern.name}` : ""}`, units: r.units ?? 0 });
-    } catch (e) {
-      setError((e as Error).message);
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  async function check() {
-    if (!lastRender || !brows?.color) return;
-    setBusy("verify");
-    setError(null);
-    try {
-      const v = await postForm<Verify>("/api/tryon/verify-brows", await form(demo ? {} : { photo: lastRender.blob }));
+      const v: Verify = { measuredHex: r.measuredHex ?? null, deltaE: r.deltaE ?? null, units: r.units, source: r.source, rounds: r.rounds };
+      await db.renders.put({ id: "brows", kind: "brows", blob, label: "Brows and lashes", createdAt: new Date().toISOString(), meta: { source: r.source, pattern: r.pattern ?? null, verify: v } });
       setVerify(v);
-      await db.renders.update("brows", { meta: { ...lastRender.meta, verify: v } });
-      await db.receipts.add({ at: new Date().toISOString(), kind: "tool", name: "YouCam Face Analyzer", status: "ok", detail: `re-measured brows ΔE ${v.deltaE?.toFixed(1) ?? "n/a"}`, units: v.units ?? 0 });
+      await db.receipts.add({ at: new Date().toISOString(), kind: "tool", name: "YouCam Makeup VTO + Face Analyzer", status: "ok", detail: `${r.rounds?.length ?? 1} rounds, ΔE ${r.deltaE?.toFixed(1) ?? "n/a"}`, units: r.units ?? 0 });
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -127,19 +114,29 @@ export default function BrowsPage() {
       </div>
 
       <div className="mt-4 flex flex-col gap-3">
-        <Button disabled={busy !== null || !todayUrl} onClick={draw}>{busy === "render" ? "Drawing…" : renderUrl ? "Draw again" : "Draw my brows back"}</Button>
-        {renderUrl && (
-          <Button variant="ghost" disabled={busy !== null} onClick={check}>{busy === "verify" ? "Re-measuring…" : "Check the colour with YouCam"}</Button>
-        )}
+        <Button disabled={busy !== null || !todayUrl} onClick={draw}>{busy === "render" ? "Drawing and checking…" : renderUrl ? "Draw again" : "Draw my brows back"}</Button>
+
       </div>
 
       {verify && (
-        <Card title="Checked">
-          <Row k="Measured before treatment" v={brows.color.value.hex.toUpperCase()} />
-          <Row k="Re-measured on the drawing" v={verify.measuredHex?.toUpperCase() ?? "—"} />
-          <Row k="Difference" v={verify.deltaE === null ? "—" : `ΔE ${verify.deltaE.toFixed(1)}`} />
-          <p className="pb-3 text-[13px] leading-[1.5] text-[var(--ink-3)]">
-            YouCam's Face Analyzer read the drawn brows back{verify.source === "replay" ? " (recorded demo result)" : ""}. Under about 3 reads as the same colour to the eye.
+        <Card title="Checked by YouCam">
+          <p className="pb-2 text-[14px] leading-[1.5] text-[var(--ink-2)]">
+            After each drawing, YouCam's Face Analyzer measured the drawn brows again. Kept corrected the colour until they read as your own.
+          </p>
+          {(verify.rounds ?? []).map((r) => (
+            <Row
+              key={r.round}
+              k={`Round ${r.round}${r.strength === "fuller" ? " · fuller" : ""}`}
+              v={
+                <span className="inline-flex items-center gap-2 text-[16px]">
+                  {r.measuredHex && <Swatch hex={r.measuredHex} size={20} />}
+                  {r.deltaE === null ? "—" : r.deltaE < 0.05 ? "same shade" : `ΔE ${r.deltaE.toFixed(1)}`}
+                </span>
+              }
+            />
+          ))}
+          <p className="pb-3 pt-1 text-[13px] leading-[1.5] text-[var(--ink-3)]">
+            Your measured brows: {brows.color.value.hex.toUpperCase()}. YouCam reports brow colour in steps, so “same shade” means the drawing reads as the step it measured before treatment.{verify.source === "replay" ? " Recorded demo result." : ""}
           </p>
         </Card>
       )}
