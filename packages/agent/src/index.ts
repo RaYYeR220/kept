@@ -1,3 +1,4 @@
+export * from "./classify.ts";
 export * from "./companion.ts";
 export * from "./gates.ts";
 export * from "./prompt.ts";

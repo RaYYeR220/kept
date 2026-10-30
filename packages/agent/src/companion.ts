@@ -1,5 +1,6 @@
 import { generateText, InvalidToolInputError, isStepCount, NoSuchToolError, type LanguageModel, type ModelMessage } from "ai";
-import { routeScope, type LikenessSummary, type TreatmentPlan } from "@kept/likeness";
+import { routeScope, stricterScope, type LikenessSummary, type TreatmentPlan } from "@kept/likeness";
+import { classifyScope } from "./classify.ts";
 import { lintReply, MEDICAL_CARD, URGENT_CARD, type CareCard } from "./gates.ts";
 import { systemPrompt } from "./prompt.ts";
 import { ReceiptLog, type Receipt } from "./receipts.ts";
@@ -17,6 +18,8 @@ export type CompanionInput = {
 
 export type CompanionDeps = {
   model: LanguageModel;
+  /** Scope classifier (second layer after the keyword router). Omit to use the router alone. */
+  classifier?: LanguageModel;
   tools: CompanionTools;
   now?: () => string;
   /** Negative control for the eval: disables the scope router, the claim linter and the product filter. */
@@ -33,10 +36,17 @@ export async function runCompanion(input: CompanionInput, deps: CompanionDeps): 
   const last = [...input.messages].reverse().find((m) => m.role === "user")?.content ?? "";
 
   if (!deps.gatesOff) {
-    const scope = routeScope(last);
-    if (scope.scope !== "appearance") {
-      log.gate("scope", `${scope.scope}: ${scope.matched.join(", ")}`);
-      return { kind: "refusal", scope: scope.scope, card: scope.scope === "urgent" ? URGENT_CARD : MEDICAL_CARD, receipts: log.items };
+    const routed = routeScope(last);
+    let scope = routed.scope;
+    const why = routed.matched.length ? [`keywords: ${routed.matched.join(", ")}`] : [];
+    if (deps.classifier && scope !== "urgent") {
+      const c = await classifyScope(last, deps.classifier);
+      if (c.scope !== "appearance") why.push(`classifier: ${c.reason}`);
+      scope = stricterScope(scope, c.scope);
+    }
+    if (scope !== "appearance") {
+      log.gate("scope", `${scope}: ${why.join("; ")}`);
+      return { kind: "refusal", scope, card: scope === "urgent" ? URGENT_CARD : MEDICAL_CARD, receipts: log.items };
     }
   }
 

@@ -31,12 +31,31 @@ const MEDICAL: RegExp[] = [
   /\bwill my (hair|brows|eyebrows|lashes|eyelashes) (grow back|come back|return)\b/i,
   /\bshould i (stop|start|skip|pause|delay|try)\b/i,
   /\b(get|getting|have) my nails done\b/i,
+  // v2 (from the v1 eval misses): safety questions about a named thing, "should I see
+  // someone", "is it normal", eye drops, and dose words on their own.
+  /\b(is|are|would)\b[^?.]{1,40}\b(safe|unsafe|harmful|harmless)\b/i,
+  /\bshould i (see|call|contact|ask) (a |an |my |the )?(doctor|dermatologist|nurse|someone|gp|oncologist|specialist)\b/i,
+  /\bis (it|this|that) normal\b/i,
+  /\b(eye ?drops|drops)\b/i,
+  /\b(dose|doses|dosage|dosing)\b/i,
 ];
+
+// Questions about the app itself ("are my photos safe?") are not medical.
+const ABOUT_KEPT = /\b(data|photos?|pictures?|privacy|private|information|account|password|likeness)\b/i;
 
 export function routeScope(text: string): ScopeResult {
   const urgent = URGENT.flatMap((re) => text.match(re)?.[0] ?? []);
   if (urgent.length) return { scope: "urgent", matched: urgent };
-  const medical = MEDICAL.flatMap((re) => text.match(re)?.[0] ?? []);
+  const medical = MEDICAL.flatMap((re) => text.match(re)?.[0] ?? []).filter(
+    (m) => !(/\b(safe|unsafe|harmful|harmless)\b/i.test(m) && ABOUT_KEPT.test(text)),
+  );
   if (medical.length) return { scope: "medical", matched: medical };
   return { scope: "appearance", matched: [] };
+}
+
+const SEVERITY: Record<Scope, number> = { appearance: 0, medical: 1, urgent: 2 };
+
+/** The stricter of two scope verdicts — used to combine the router with a classifier. */
+export function stricterScope(a: Scope, b: Scope): Scope {
+  return SEVERITY[a] >= SEVERITY[b] ? a : b;
 }

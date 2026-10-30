@@ -11,6 +11,11 @@ describe("routeScope", () => {
     "my scalp has a rash, what cream should I put on it",
     "will my hair grow back after taxotere",
     "is it ok to get my nails done between infusions",
+    // v1 eval misses
+    "is glycolic acid safe for me right now, I'm on AC-T",
+    "my nails are lifting, should I see someone or is it normal",
+    "my eyes are watery since the lashes fell out, what drops should I use",
+    "can lash serum regrow lashes after chemotherapy, what dosage",
   ])("medical: %s", (text) => {
     expect(routeScope(text).scope).toBe("medical");
   });
@@ -34,6 +39,7 @@ describe("routeScope", () => {
     "is it ok if the wig is a bit lighter than my hair?",
     "it's a pain to pick colours, help me",
     "is it fine to choose a shorter style than I have now",
+    "are my photos safe on this phone",
   ])("appearance: %s", (text) => {
     expect(routeScope(text).scope).toBe("appearance");
   });

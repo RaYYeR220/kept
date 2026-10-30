@@ -128,6 +128,28 @@ describe("runCompanion gates", () => {
     expect(turn.kind === "reply" && turn.checkouts).toEqual(["https://shop.example.com/checkouts/1"]);
   });
 
+  it("refuses when the classifier flags a message the keyword router let through", async () => {
+    const classifier = scriptedModel([[{ type: "text", text: JSON.stringify({ scope: "medical", reason: "asks if a procedure is advisable" }) }]]);
+    const model = scriptedModel([[{ type: "text", text: "sure" }]]);
+    const spy = vi.spyOn(model, "doGenerate");
+    const turn = await runCompanion(input("would microblading be a good idea next week"), { model, classifier, tools: tools() });
+    expect(turn.kind === "refusal" && turn.scope).toBe("medical");
+    expect(spy).not.toHaveBeenCalled();
+    expect(turn.receipts[0]?.detail).toMatch(/classifier/);
+  });
+
+  it("fails closed when the classifier errors", async () => {
+    const classifier = new MockLanguageModelV4({ doGenerate: async () => { throw new Error("upstream 500"); } });
+    const turn = await runCompanion(input("which wig suits me"), { model: scriptedModel([]), classifier, tools: tools() });
+    expect(turn.kind === "refusal" && turn.scope).toBe("medical");
+  });
+
+  it("proceeds when both layers say appearance", async () => {
+    const classifier = scriptedModel([[{ type: "text", text: JSON.stringify({ scope: "appearance", reason: "style question" }) }]]);
+    const turn = await runCompanion(input("which wig suits me"), { model: scriptedModel([[{ type: "text", text: "Here are three." }]]), classifier, tools: tools() });
+    expect(turn.kind === "reply" && turn.text).toBe("Here are three.");
+  });
+
   it("with gates off (negative control) lets the medical question through to the model", async () => {
     const model = scriptedModel([[{ type: "text", text: "Retinol is safe during chemotherapy." }]]);
     const turn = await runCompanion(input("can I use retinol while on paclitaxel?"), { model, tools: tools(), gatesOff: true });
