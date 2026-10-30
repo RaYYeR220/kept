@@ -1,0 +1,239 @@
+{
+ "recordedAt": "2026-10-30T07:30:10.039Z",
+ "events": [
+  {
+   "type": "step",
+   "key": "skinTone",
+   "status": "running"
+  },
+  {
+   "type": "step",
+   "key": "faceAttr",
+   "status": "running"
+  },
+  {
+   "type": "step",
+   "key": "hairLength",
+   "status": "running"
+  },
+  {
+   "type": "step",
+   "key": "skinTone",
+   "status": "done",
+   "units": 20
+  },
+  {
+   "type": "step",
+   "key": "hairDensity",
+   "status": "running"
+  },
+  {
+   "type": "step",
+   "key": "hairLength",
+   "status": "done",
+   "units": 2
+  },
+  {
+   "type": "step",
+   "key": "hairType",
+   "status": "running"
+  },
+  {
+   "type": "step",
+   "key": "faceAttr",
+   "status": "done",
+   "units": 10
+  },
+  {
+   "type": "step",
+   "key": "fitzpatrick",
+   "status": "running"
+  },
+  {
+   "type": "step",
+   "key": "hairDensity",
+   "status": "failed",
+   "detail": "error_face_angle_invalid"
+  },
+  {
+   "type": "retake",
+   "key": "hairDensity",
+   "message": "Look straight at the camera with your head level."
+  },
+  {
+   "type": "step",
+   "key": "hairType",
+   "status": "done",
+   "units": 2
+  },
+  {
+   "type": "step",
+   "key": "fitzpatrick",
+   "status": "done",
+   "units": 10
+  },
+  {
+   "type": "done",
+   "likeness": {
+    "id": "36b2746b-bb82-4f2c-a95a-3eaa49cc7f16",
+    "createdAt": "2026-10-30T07:30:08.734Z",
+    "consent": {
+     "at": "2026-10-30T07:29:29.326Z",
+     "textVersion": "2026-10-30"
+    },
+    "hair": {
+     "color": {
+      "value": {
+       "hex": "#b56637",
+       "name": "Auburn"
+      },
+      "prov": {
+       "api": "skin-tone-analysis",
+       "version": "v2.0",
+       "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W0s6Vcsndn5b9Zr3FIf81zyaWDS9eILM6KP1umZGeEfHw",
+       "units": 20,
+       "at": "2026-10-30T07:29:44.027Z",
+       "source": "replay"
+      }
+     },
+     "type": {
+      "value": {
+       "mapping": "2B to 2C",
+       "term": "Medium to Thick Wavy"
+      },
+      "prov": {
+       "api": "hair-type-detection",
+       "version": "v2.0",
+       "taskId": "4rsyepa-rLp_jm45JmXkU7QuhjyPxrqbpzHS5V9751fuZvQKZid9l49waBcVWuQJiP-cNNm0IpvzVURHq0sAXA",
+       "units": 2,
+       "at": "2026-10-30T07:30:04.773Z",
+       "source": "replay"
+      }
+     },
+     "length": {
+      "value": {
+       "mapping": null,
+       "term": "short hair"
+      },
+      "prov": {
+       "api": "hair-length-detection",
+       "version": "v2.0",
+       "taskId": "4rsyepa-rLp_jm45JmXkU7QuhjyPxrqbpzHS5V9751chAvOgAum4ijWUxd7x0uali0R0zGmELW8ryRHCmXEjaQ",
+       "units": 2,
+       "at": "2026-10-30T07:29:50.659Z",
+       "source": "replay"
+      }
+     },
+     "density": null,
+     "frizz": null
+    },
+    "brows": {
+     "color": {
+      "value": {
+       "hex": "#805d47"
+      },
+      "prov": {
+       "api": "skin-tone-analysis",
+       "version": "v2.0",
+       "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W0s6Vcsndn5b9Zr3FIf81zyaWDS9eILM6KP1umZGeEfHw",
+       "units": 20,
+       "at": "2026-10-30T07:29:44.027Z",
+       "source": "replay"
+      }
+     },
+     "shape": {
+      "value": {
+       "shape": "Soft Angled",
+       "thickness": "Average"
+      },
+      "prov": {
+       "api": "face-attr-analysis",
+       "version": "v2.0",
+       "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W2arAOx5VUrmwYWWtOlhPjKScgIlJTAJUMBSj2Ri1JFpA",
+       "units": 10,
+       "at": "2026-10-30T07:29:55.098Z",
+       "source": "replay"
+      }
+     }
+    },
+    "skin": {
+     "tone": {
+      "value": {
+       "hex": "#b79479"
+      },
+      "prov": {
+       "api": "skin-tone-analysis",
+       "version": "v2.0",
+       "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W0s6Vcsndn5b9Zr3FIf81zyaWDS9eILM6KP1umZGeEfHw",
+       "units": 20,
+       "at": "2026-10-30T07:29:44.027Z",
+       "source": "replay"
+      }
+     },
+     "fitzpatrick": {
+      "value": "II",
+      "prov": {
+       "api": "fitzpatrick-scale-analyzer",
+       "version": "v2.0",
+       "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W3u-q-bBgPGOBu2S5CcgpKCVSf2WmnU8QD4vnx7klL26A",
+       "units": 10,
+       "at": "2026-10-30T07:30:08.733Z",
+       "source": "replay"
+      }
+     },
+     "baseline": null
+    },
+    "eyes": {
+     "value": {
+      "hex": "#5b3c2c",
+      "name": "Brown"
+     },
+     "prov": {
+      "api": "skin-tone-analysis",
+      "version": "v2.0",
+      "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W0s6Vcsndn5b9Zr3FIf81zyaWDS9eILM6KP1umZGeEfHw",
+      "units": 20,
+      "at": "2026-10-30T07:29:44.027Z",
+      "source": "replay"
+     }
+    },
+    "lips": {
+     "value": {
+      "hex": "#c58b88"
+     },
+     "prov": {
+      "api": "skin-tone-analysis",
+      "version": "v2.0",
+      "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W0s6Vcsndn5b9Zr3FIf81zyaWDS9eILM6KP1umZGeEfHw",
+      "units": 20,
+      "at": "2026-10-30T07:29:44.027Z",
+      "source": "replay"
+     }
+    },
+    "face": {
+     "value": {
+      "shape": "Square"
+     },
+     "prov": {
+      "api": "face-attr-analysis",
+      "version": "v2.0",
+      "taskId": "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W2arAOx5VUrmwYWWtOlhPjKScgIlJTAJUMBSj2Ri1JFpA",
+      "units": 10,
+      "at": "2026-10-30T07:29:55.098Z",
+      "source": "replay"
+     }
+    },
+    "status": "complete"
+   },
+   "taskIds": [
+    "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W0s6Vcsndn5b9Zr3FIf81zyaWDS9eILM6KP1umZGeEfHw",
+    "4rsyepa-rLp_jm45JmXkU7QuhjyPxrqbpzHS5V9751chAvOgAum4ijWUxd7x0uali0R0zGmELW8ryRHCmXEjaQ",
+    "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W2arAOx5VUrmwYWWtOlhPjKScgIlJTAJUMBSj2Ri1JFpA",
+    "4rsyepa-rLp_jm45JmXkU7QuhjyPxrqbpzHS5V9751fPREnjrindZP4aWrvaPe5Fc8aViIJBDiFRYIwMoW59pQ",
+    "4rsyepa-rLp_jm45JmXkU7QuhjyPxrqbpzHS5V9751fuZvQKZid9l49waBcVWuQJiP-cNNm0IpvzVURHq0sAXA",
+    "PFOaTkGtloTb2w6Pn0Jg0rvcck91lbNlzMz3_fF21W3u-q-bBgPGOBu2S5CcgpKCVSf2WmnU8QD4vnx7klL26A"
+   ],
+   "units": 44
+  }
+ ]
+}

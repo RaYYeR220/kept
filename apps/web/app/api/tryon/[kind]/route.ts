@@ -2,7 +2,7 @@ import { BudgetError, YouCamHttpError, YouCamTaskError } from "@kept/youcam";
 import { youcamFor } from "@/lib/server/env";
 import { asPersona, replayImage, replayJson } from "@/lib/server/replay";
 import { json, sessionId } from "@/lib/server/session";
-import { renderBrows, renderHat, renderWig, verifyBrows } from "@/lib/server/tryon";
+import { calibrateBrows, renderBrows, renderHat, renderWig, verifyBrows } from "@/lib/server/tryon";
 
 export const runtime = "nodejs";
 export const maxDuration = 90;
@@ -48,6 +48,10 @@ export async function POST(req: Request, ctx: { params: Promise<{ kind: string }
       const browHex = hex(form.get("browHex"));
       if (!browHex) return json({ error: "Measured brow colour is required." }, 400);
       const shape = form.get("browShape") ? { shape: String(form.get("browShape")), thickness: String(form.get("browThickness") ?? "Unknown") } : null;
+      if (form.get("calibrate") === "1") {
+        const c = await calibrateBrows(yc, bytes, { hex: browHex, shape }, sid);
+        return json({ image: b64(c.best.image), units: c.units, api: "makeup-vto", pattern: c.best.pattern, rounds: c.rounds, deltaE: c.best.deltaE, measuredHex: c.best.measuredHex, source: "live" });
+      }
       const r = await renderBrows(yc, bytes, { hex: browHex, shape }, sid);
       return json({ image: b64(r.image), units: r.units, api: r.api, taskId: r.taskId, pattern: r.pattern, source: "live" });
     }

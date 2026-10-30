@@ -1,5 +1,6 @@
-import { deltaE00, hexToLab, matchBrowPattern, type BrowShape } from "@kept/likeness";
-import { parseFaceAttr, parseResultUrl, type FeatureKey, type YouCam } from "@kept/youcam";
+import { correctTowards, deltaE00, hexToLab, labToHex, matchBrowPattern, shouldStop, type BrowMatch, type BrowShape } from "@kept/likeness";
+import { parseFaceAttr, parseFaceBoxes, parseResultUrl, type FeatureKey, type YouCam } from "@kept/youcam";
+import { cropToFace } from "./crop";
 
 const PATTERNS = "https://plugins-media.makeupar.com/wcm-saas/patterns";
 const catalogue = new Map<string, Promise<Array<{ category: string; label: string }>>>();
@@ -37,15 +38,20 @@ async function imageTask(yc: YouCam, photo: Uint8Array, feature: FeatureKey, bod
   }
 }
 
-export async function renderBrows(yc: YouCam, photo: Uint8Array, brows: { hex: string; shape: BrowShape | null }, sessionId: string) {
+export type BrowStrength = { intensity: number; thicknessBoost: number; definition: number };
+export const BROW_DEFAULT: BrowStrength = { intensity: 90, thicknessBoost: 0, definition: 60 };
+/** Fuller application used by correction rounds: drawn strokes blend less with the skin under them. */
+export const BROW_STRONG: BrowStrength = { intensity: 100, thicknessBoost: 20, definition: 85 };
+
+export async function renderBrows(yc: YouCam, photo: Uint8Array, brows: { hex: string; shape: BrowShape | null }, sessionId: string, strength: BrowStrength = BROW_DEFAULT) {
   const [brow, lash] = await Promise.all([patterns("eyebrows"), patterns("eyelashes")]);
   const match = matchBrowPattern(brows.shape ?? { shape: "Obscured", thickness: "Unknown" }, brow);
   const lashPattern = lash.find((p) => /natural/i.test(p.category) || /natural/i.test(p.label)) ?? lash[0];
   const effects: Record<string, unknown>[] = [
     {
       category: "eyebrows",
-      pattern: { type: "shape", name: match.name, curvature: match.curvature, thickness: match.thickness, definition: match.definition },
-      palettes: [{ color: brows.hex, colorIntensity: 70, texture: "matte" }],
+      pattern: { type: "shape", name: match.name, curvature: match.curvature, thickness: Math.min(100, match.thickness + strength.thicknessBoost), definition: strength.definition },
+      palettes: [{ color: brows.hex, colorIntensity: strength.intensity, texture: "matte" }],
     },
   ];
   if (lashPattern) effects.push({ category: "eyelashes", pattern: { name: lashPattern.label }, palettes: [{ color: "#1c1814", colorIntensity: 55 }] });
@@ -64,7 +70,12 @@ export const renderHat = (yc: YouCam, photo: Uint8Array, refUrl: string, gender:
  * rendered photo, and Kept reports how far it landed from the person's measured brows.
  */
 export async function verifyBrows(yc: YouCam, rendered: Uint8Array, targetHex: string, sessionId: string) {
-  const { fileId } = await yc.upload(rendered, "image/jpeg", "render.jpg");
+  const full = await yc.upload(rendered, "image/jpeg", "render.jpg");
+  const pre = await yc.run("facePre", { src_file_id: full.fileId }, { sessionId });
+  await yc.deleteTask(pre.taskId).catch(() => undefined);
+  const box = parseFaceBoxes(pre.results)[0];
+  if (!box) throw new Error("Couldn't find the face on the drawing to check it.");
+  const { fileId } = await yc.upload(await cropToFace(rendered, box), "image/jpeg", "render-face.jpg");
   const out = await yc.run("faceAttr", { src_file_id: fileId, features: ["eyebrowColor", "eyebrowShape", "eyebrowThickness"] }, { sessionId });
   await yc.deleteTask(out.taskId).catch(() => undefined);
   const read = parseFaceAttr(out.results);
@@ -75,4 +86,31 @@ export async function verifyBrows(yc: YouCam, rendered: Uint8Array, targetHex: s
     units: out.units,
     taskId: out.taskId,
   };
+}
+
+export type CalibrationRound = { round: number; inputHex: string; strength: "default" | "fuller"; measuredHex: string | null; deltaE: number | null; units: number };
+
+/**
+ * Draws the brows, has YouCam measure the drawing, and shifts the requested colour by the
+ * error until the drawn brows read within ΔE 5 of the person's own (at most `maxRounds`).
+ * The measuring API calibrates the rendering API.
+ */
+export async function calibrateBrows(yc: YouCam, photo: Uint8Array, brows: { hex: string; shape: BrowShape | null }, sessionId: string, maxRounds = 3) {
+  const target = hexToLab(brows.hex);
+  let input = target;
+  const rounds: CalibrationRound[] = [];
+  let best: { image: Uint8Array; deltaE: number | null; inputHex: string; pattern: BrowMatch; measuredHex: string | null } | null = null;
+  for (let round = 1; ; round++) {
+    const inputHex = labToHex(input);
+    const strength = round === 1 ? BROW_DEFAULT : BROW_STRONG;
+    const r = await renderBrows(yc, photo, { hex: inputHex, shape: brows.shape }, sessionId, strength);
+    const v = await verifyBrows(yc, r.image, brows.hex, sessionId);
+    rounds.push({ round, inputHex, strength: round === 1 ? "default" : "fuller", measuredHex: v.measuredHex, deltaE: v.deltaE, units: r.units + v.units });
+    if (!best || (v.deltaE ?? Infinity) < (best.deltaE ?? Infinity)) {
+      best = { image: r.image, deltaE: v.deltaE, inputHex, pattern: r.pattern, measuredHex: v.measuredHex };
+    }
+    if (v.deltaE === null || !v.measuredHex || shouldStop(v.deltaE, round, maxRounds)) break;
+    input = correctTowards(input, target, hexToLab(v.measuredHex));
+  }
+  return { best: best!, rounds, units: rounds.reduce((s, r) => s + r.units, 0) };
 }

@@ -1,4 +1,5 @@
 export * from "./brows.ts";
+export * from "./calibrate.ts";
 export * from "./citations.ts";
 export * from "./colour.ts";
 export * from "./lint.ts";
