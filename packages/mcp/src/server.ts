@@ -11,7 +11,7 @@ import {
   type SharedLikeness,
 } from "@kept/likeness";
 
-// Kept's MCP server. Any MCP client (a wig specialist's assistant, Claude, ChatGPT) can read
+// Kept's MCP server. Any MCP client (a wig specialist's assistant or a desktop AI app) can read
 // a likeness the person shared, rank wigs against it, check products and plan the typical
 // timeline. Access to a likeness is scoped by its share token; nothing else is exposed.
 

@@ -13,7 +13,7 @@ Every public statement about Kept, tagged by how it can be checked.
 |---|---|---|
 | A likeness is measured from four photos by Skin Tone, Face Analyzer, Hair Type, Hair Length, Hair Density and Fitzpatrick | VERIFIED-LIVE | `fixtures/replay/{anna,marcus}/capture.json` (task ids, units, timestamps) |
 | Skin Tone and Face Analyzer need the face to fill most of the frame; Kept crops to the face found by YouCam's free pre-process step | VERIFIED-LIVE | `lib/server/crop.ts`; uncropped photos returned `error_face_position_too_small` |
-| YouCam's hair-colour attribute read both personas (chestnut, black) as "Auburn", so Kept reads the hair shade itself | VERIFIED-LIVE | spike logs; `lib/server/sample.ts`, `packages/likeness/src/sample.ts` |
+| YouCam's hair-colour attribute read both personas (chestnut, black) as "Auburn", so Kept reads the hair shade itself | VERIFIED-LIVE | live test logs; `lib/server/sample.ts`, `packages/likeness/src/sample.ts` |
 | Hair density needs a photo of the parting with part of the face visible | VERIFIED-LIVE | `error_face_angle_invalid` / `error_no_face` on other views |
 | A failed YouCam task costs no units | VERIFIED-LIVE | balance unchanged after failed tasks |
 
