@@ -109,6 +109,15 @@ describe("upload", () => {
   });
 });
 
+describe("account", () => {
+  it("reads the credit balance from the live response shape", async () => {
+    const t = scriptedTransport({
+      "GET /s2s/v1.0/client/credit": { status: 200, body: { status: 200, results: [{ id: 1, type: "ApiPaygToken", amount: 1000, amount_dec: 1000, expiry: 1801180799000 }] } },
+    });
+    expect(await createYouCam({ apiKey: "k", transport: t }).credit()).toBe(1000);
+  });
+});
+
 describe("unit estimates", () => {
   it("prices skin analysis by tier and HD/SD", () => {
     expect(FEATURES.skinAnalysis.estimateUnits({ dst_actions: ["hd_moisture", "hd_redness", "hd_radiance", "hd_texture", "hd_oiliness"] })).toBe(16);

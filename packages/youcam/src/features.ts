@@ -14,7 +14,8 @@ export type FeatureKey =
   | "makeupVto"
   | "hat"
   | "nailVto"
-  | "textToImage";
+  | "textToImage"
+  | "facePre";
 
 export type FeatureSpec = {
   /** Slug used in provenance and in the task path. */
@@ -52,6 +53,8 @@ export const FEATURES: Record<FeatureKey, FeatureSpec> = {
   hat: { api: "hat", version: "v2.0", estimateUnits: () => 2 },
   nailVto: { api: "nail-vto", version: "v2.0", estimateUnits: () => 1 },
   textToImage: { api: "text-to-image/youcam", version: "v2.0", estimateUnits: () => 1 },
+  // Free pre-processing step that returns face bounding boxes; Kept uses it to crop to the face.
+  facePre: { api: "fitzpatrick-scale-analyzer/pre-process", version: "v2.0", estimateUnits: () => 0 },
 };
 
 export const taskPath = (key: FeatureKey) => `/s2s/${FEATURES[key].version}/task/${FEATURES[key].api}`;

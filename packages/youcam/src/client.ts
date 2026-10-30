@@ -25,7 +25,7 @@ export type TaskOutcome<R = Record<string, unknown>> = {
   version: string;
 };
 
-type Envelope<T> = { status: number; data?: T; error?: string; error_code?: string; error_message?: string };
+type Envelope<T> = { status: number; data?: T; result?: T; results?: T; error?: string; error_code?: string; error_message?: string };
 
 export function createYouCam(opts: YouCamOptions) {
   const base = opts.baseUrl ?? YOUCAM_BASE_URL;
@@ -48,7 +48,8 @@ export function createYouCam(opts: YouCamOptions) {
     if (!res.ok || (env.status && env.status >= 400)) {
       throw new YouCamHttpError(res.status, env.error_code ?? null, env.error ?? env.error_message ?? `YouCam ${res.status}`);
     }
-    return env.data as T;
+    // Task endpoints answer in `data`; credit and feature-cost answer in `results` / `result`.
+    return (env.data ?? env.result ?? env.results) as T;
   }
 
   /** Two-step upload: register the file, then PUT the bytes to the presigned URL with its exact headers. */

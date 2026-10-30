@@ -87,3 +87,16 @@ export function parseResultUrl(results: unknown): string | null {
   const r = obj(results);
   return str(r.url) ?? str(obj(Array.isArray(r.output) ? r.output[0] : null).url);
 }
+
+export type FaceBox = { left: number; top: number; width: number; height: number };
+
+/** Face boxes from the Fitzpatrick pre-process step, largest first. */
+export function parseFaceBoxes(results: unknown): FaceBox[] {
+  const list = obj(results).result;
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((b) => obj(b))
+    .filter((b) => [b.left, b.top, b.width, b.height].every((v) => typeof v === "number"))
+    .map((b) => ({ left: b.left as number, top: b.top as number, width: b.width as number, height: b.height as number }))
+    .sort((a, b) => b.width * b.height - a.width * a.height);
+}

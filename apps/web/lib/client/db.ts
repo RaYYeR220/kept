@@ -19,7 +19,7 @@ export type Settings = {
 };
 
 export type StoredPhoto = { slot: PhotoSlot; blob: Blob; takenAt: string };
-export type StoredLikeness = { id: "current"; likeness: Likeness; crossCheck: { browDeltaE: number | null }; taskIds: string[]; units: number };
+export type StoredLikeness = { id: "current"; likeness: Likeness; taskIds: string[]; units: number };
 export type StoredRender = { id: string; kind: "wig" | "brows" | "hat"; blob: Blob; label: string; createdAt: string; meta: Record<string, unknown> };
 export type StoredReceipt = { id?: number; at: string; kind: "tool" | "gate" | "measure"; name: string; status: string; detail: string; units?: number };
 export type StoredShare = { token: string; expiresAt: string; photoShared: boolean; createdAt: string; revoked: boolean };

@@ -1,6 +1,7 @@
 import {
   BudgetError,
   parseFaceAttr,
+  parseFaceBoxes,
   parseFitzpatrick,
   parseHairDensity,
   parseHairLength,
@@ -12,7 +13,8 @@ import {
   type TaskOutcome,
   type YouCam,
 } from "@kept/youcam";
-import { deltaE00, hexToLab, isComplete, type Likeness, type Provenance } from "@kept/likeness";
+import { isComplete, type Likeness, type Provenance } from "@kept/likeness";
+import { cropToFace } from "./crop";
 
 export type CapturePhotos = { front: Uint8Array; right?: Uint8Array; left?: Uint8Array };
 
@@ -32,9 +34,9 @@ export type StepKey = "skinTone" | "faceAttr" | "hairType" | "hairLength" | "hai
 export type CaptureEvent =
   | { type: "step"; key: StepKey; status: "running" | "done" | "failed" | "skipped"; detail?: string; units?: number }
   | { type: "retake"; key: StepKey; message: string }
-  | { type: "done"; likeness: Likeness; crossCheck: { browDeltaE: number | null }; taskIds: string[]; units: number };
+  | { type: "done"; likeness: Likeness; taskIds: string[]; units: number };
 
-export const FACE_FEATURES = ["eyebrowShape", "eyebrowThickness", "eyebrowColor", "hairColor", "faceShape"] as const;
+export const FACE_FEATURES = ["eyebrowShape", "eyebrowThickness", "eyebrowColor", "faceShape"] as const;
 export const SKIN_CONCERNS = ["hd_moisture", "hd_redness", "hd_radiance", "hd_texture", "hd_oiliness"] as const;
 
 /** Simple async channel so parallel tasks can stream events in completion order. */
@@ -56,8 +58,20 @@ function channel<T>() {
 
 export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: CaptureOptions): AsyncGenerator<CaptureEvent> {
   const now = opts.now ?? (() => new Date().toISOString());
-  const ids: Record<"front" | "right" | "left", string | null> = { front: null, right: null, left: null };
+  const ids: Record<"front" | "right" | "left" | "face", string | null> = { front: null, right: null, left: null, face: null };
   ids.front = (await yc.upload(photos.front, "image/jpeg", "front.jpg")).fileId;
+  const preTaskIds: string[] = [];
+
+  // Colour and brow readings need the face to fill most of the frame; hair readings need
+  // the whole head. YouCam's free pre-process step finds the face; Kept crops to it.
+  const pre = await yc.run("facePre", { src_file_id: ids.front }, { sessionId: opts.sessionId });
+  preTaskIds.push(pre.taskId);
+  const box = parseFaceBoxes(pre.results)[0];
+  if (!box) {
+    yield { type: "retake", key: "skinTone", message: "We couldn't find a face. Face the camera with your whole face in view." };
+  } else {
+    ids.face = (await yc.upload(await cropToFace(photos.front, box), "image/jpeg", "face.jpg")).fileId;
+  }
   if (photos.right && photos.left) {
     ids.right = (await yc.upload(photos.right, "image/jpeg", "right.jpg")).fileId;
     ids.left = (await yc.upload(photos.left, "image/jpeg", "left.jpg")).fileId;
@@ -65,14 +79,18 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
 
   type Job = { key: StepKey; feature: FeatureKey; body: Record<string, unknown> };
   const jobs: Job[] = [
-    { key: "skinTone", feature: "skinTone", body: { src_file_id: ids.front, face_angle_strictness_level: "medium" } },
-    { key: "faceAttr", feature: "faceAttr", body: { src_file_id: ids.front, features: [...FACE_FEATURES], face_angle_strictness_level: "medium" } },
+    ...(ids.face
+      ? [
+          { key: "skinTone" as const, feature: "skinTone" as const, body: { src_file_id: ids.face } },
+          { key: "faceAttr" as const, feature: "faceAttr" as const, body: { src_file_id: ids.face, features: [...FACE_FEATURES] } },
+        ]
+      : []),
     { key: "hairLength", feature: "hairLength", body: { src_file_id: ids.front } },
     { key: "hairDensity", feature: "hairDensity", body: { src_file_id: ids.front } },
   ];
   if (ids.right && ids.left) jobs.push({ key: "hairType", feature: "hairType", body: { src_file_ids: [ids.front, ids.right, ids.left] } });
-  if (opts.fitzpatrick) jobs.push({ key: "fitzpatrick", feature: "fitzpatrick", body: { src_file_id: ids.front, version: "1.0" } });
-  if (opts.skinBaseline) jobs.push({ key: "skinAnalysis", feature: "skinAnalysis", body: { src_file_id: ids.front, dst_actions: [...SKIN_CONCERNS], format: "json" } });
+  if (opts.fitzpatrick && ids.face) jobs.push({ key: "fitzpatrick", feature: "fitzpatrick", body: { src_file_id: ids.face, version: "1.0" } });
+  if (opts.skinBaseline && ids.face) jobs.push({ key: "skinAnalysis", feature: "skinAnalysis", body: { src_file_id: ids.face, dst_actions: [...SKIN_CONCERNS], format: "json" } });
 
   const results = new Map<StepKey, TaskOutcome & { at: string }>();
   const taskIds: string[] = [];
@@ -151,12 +169,9 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
     face: m("faceAttr", face?.faceShape ? { shape: face.faceShape } : null),
   };
 
-  // The same brows, read by two independent YouCam models: their agreement is shown, not assumed.
-  const browDeltaE = tone?.brows && face?.brows ? deltaE00(hexToLab(tone.brows), hexToLab(face.brows)) : null;
-
   const units = [...results.values()].reduce((s, r) => s + r.units, 0);
-  yield { type: "done", likeness: { ...body, status: isComplete(body) ? "complete" : "incomplete" }, crossCheck: { browDeltaE }, taskIds, units };
+  yield { type: "done", likeness: { ...body, status: isComplete(body) ? "complete" : "incomplete" }, taskIds, units };
 
   // Privacy: the photos only needed to exist while they were measured.
-  await Promise.allSettled(taskIds.map((id) => yc.deleteTask(id)));
+  await Promise.allSettled([...preTaskIds, ...taskIds].map((id) => yc.deleteTask(id)));
 }

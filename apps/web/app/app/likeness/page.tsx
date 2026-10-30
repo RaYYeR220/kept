@@ -13,7 +13,6 @@ export default function LikenessPage() {
   if (!stored) return <Title sub="Nothing measured yet.">Your likeness</Title>;
   const l = stored.likeness;
   const measuredOn = new Date(l.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
-  const cross = stored.crossCheck.browDeltaE;
 
   return (
     <>
@@ -55,9 +54,6 @@ export default function LikenessPage() {
           </div>
         )}
         {l.brows.shape && <Row k="Brow shape" v={`${l.brows.shape.value.shape}, ${l.brows.shape.value.thickness.toLowerCase()}`} prov={l.brows.shape.prov} />}
-        {cross !== null && (
-          <Row k="Checked twice" v={<span className="text-[16px]">ΔE {cross.toFixed(1)}</span>} />
-        )}
         {l.skin.tone && (
           <div className="flex items-center gap-3.5 border-t border-[var(--line)] py-3">
             <Swatch hex={l.skin.tone.value.hex} />
@@ -72,11 +68,6 @@ export default function LikenessPage() {
         {l.face && <Row k="Face shape" v={l.face.value.shape} prov={l.face.prov} />}
       </Card>
 
-      {cross !== null && (
-        <Note>
-          Your brow colour was read by two separate YouCam models (Skin Tone and Face Analyzer). They landed ΔE {cross.toFixed(1)} apart{cross < 3 ? " — the same colour to the eye" : cross < 6 ? " — very close" : " — noticeably apart, so retaking in even light may help"}.
-        </Note>
-      )}
       {l.status === "incomplete" && <Note>Some values couldn't be measured from these photos. You can retake them any time.</Note>}
 
       <div className="mt-6 flex flex-col gap-3">

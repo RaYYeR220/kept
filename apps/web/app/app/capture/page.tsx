@@ -26,7 +26,7 @@ const STEP_API: Record<string, string> = {
 };
 const STEP_WHAT: Record<string, string> = {
   skinTone: "skin, brow and hair colour",
-  faceAttr: "brow shape and a second brow-colour reading",
+  faceAttr: "brow shape and thickness, face shape",
   hairType: "curl pattern from three angles",
   hairLength: "length",
   hairDensity: "density",
@@ -89,7 +89,7 @@ export default function Capture() {
         } else if (ev.type === "done") {
           const likeness = ev.likeness as Likeness;
           await db.transaction("rw", [db.likeness, db.photos, db.receipts], async () => {
-            await db.likeness.put({ id: "current", likeness, crossCheck: ev.crossCheck as { browDeltaE: number | null }, taskIds: ev.taskIds as string[], units: Number(ev.units) });
+            await db.likeness.put({ id: "current", likeness, taskIds: ev.taskIds as string[], units: Number(ev.units) });
             const at = new Date().toISOString();
             for (const { slot } of SLOTS) if (photos[slot]) await db.photos.put({ slot, blob: photos[slot]!, takenAt: at });
             await db.receipts.add({ at, kind: "measure", name: "likeness", status: likeness.status, detail: `${Object.keys(STEP_API).length} YouCam measurements`, units: Number(ev.units) });

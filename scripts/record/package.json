@@ -1,0 +1,18 @@
+{
+  "name": "@kept/record",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "probe": "tsx probe.ts",
+    "record": "tsx record.ts"
+  },
+  "dependencies": {
+    "@kept/likeness": "workspace:^",
+    "@kept/youcam": "workspace:^",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}
