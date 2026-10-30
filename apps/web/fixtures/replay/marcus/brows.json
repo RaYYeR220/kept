@@ -1,0 +1,41 @@
+{
+ "recordedAt": "2026-10-30T08:02:01.768Z",
+ "units": 33,
+ "api": "makeup-vto",
+ "pattern": {
+  "name": "SoftArch1",
+  "curvature": 0,
+  "thickness": -20,
+  "definition": 60,
+  "measuredShape": true
+ },
+ "rounds": [
+  {
+   "round": 1,
+   "inputHex": "#3e3834",
+   "strength": "default",
+   "measuredHex": "#5b575a",
+   "deltaE": 11.363783157432945,
+   "units": 11
+  },
+  {
+   "round": 2,
+   "inputHex": "#221c11",
+   "strength": "fuller",
+   "measuredHex": "#5b575a",
+   "deltaE": 11.363783157432945,
+   "units": 11
+  },
+  {
+   "round": 3,
+   "inputHex": "#1b0f00",
+   "strength": "fuller",
+   "measuredHex": "#805d47",
+   "deltaE": 19.349033706352806,
+   "units": 11
+  }
+ ],
+ "deltaE": 11.363783157432945,
+ "measuredHex": "#5b575a",
+ "targetHex": "#3e3834"
+}

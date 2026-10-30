@@ -1,0 +1,32 @@
+{
+ "recordedAt": "2026-10-30T08:02:01.770Z",
+ "measuredHex": "#5b575a",
+ "deltaE": 11.363783157432945,
+ "units": 0,
+ "rounds": [
+  {
+   "round": 1,
+   "inputHex": "#3e3834",
+   "strength": "default",
+   "measuredHex": "#5b575a",
+   "deltaE": 11.363783157432945,
+   "units": 11
+  },
+  {
+   "round": 2,
+   "inputHex": "#221c11",
+   "strength": "fuller",
+   "measuredHex": "#5b575a",
+   "deltaE": 11.363783157432945,
+   "units": 11
+  },
+  {
+   "round": 3,
+   "inputHex": "#1b0f00",
+   "strength": "fuller",
+   "measuredHex": "#805d47",
+   "deltaE": 19.349033706352806,
+   "units": 11
+  }
+ ]
+}

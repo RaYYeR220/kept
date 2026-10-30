@@ -1,5 +1,7 @@
 import { correctTowards, deltaE00, hexToLab, labToHex, matchBrowPattern, shouldStop, type BrowMatch, type BrowShape } from "@kept/likeness";
 import { parseFaceAttr, parseFaceBoxes, parseResultUrl, type FeatureKey, type YouCam } from "@kept/youcam";
+import sharp from "sharp";
+import { undoRetouch } from "./composite";
 import { cropToFace } from "./crop";
 
 const PATTERNS = "https://plugins-media.makeupar.com/wcm-saas/patterns";
@@ -56,11 +58,22 @@ export async function renderBrows(yc: YouCam, photo: Uint8Array, brows: { hex: s
   ];
   if (lashPattern) effects.push({ category: "eyelashes", pattern: { name: lashPattern.label }, palettes: [{ color: "#1c1814", colorIntensity: 55 }] });
   const render = await imageTask(yc, photo, "makeupVto", { version: "1.0", effects }, sessionId);
-  return { ...render, pattern: match };
+  // Keep the drawn brows and lashes, but put the skin back to the person's own tone.
+  const { image } = await undoRetouch(photo, render.image);
+  return { ...render, image, pattern: match };
 }
 
-export const renderWig = (yc: YouCam, photo: Uint8Array, refUrl: string, sessionId: string) =>
-  imageTask(yc, photo, "hairTransfer", { ref_file_url: refUrl, hair_color: "ref" }, sessionId);
+/** Hairstyle transfer accepts JPEG up to 1024 px; shop photos are often PNG or WebP and larger. */
+async function asJpeg1024(bytes: Uint8Array): Promise<Uint8Array> {
+  return new Uint8Array(await sharp(bytes).rotate().resize({ width: 1024, height: 1024, fit: "inside", withoutEnlargement: true }).flatten({ background: "#ffffff" }).jpeg({ quality: 92 }).toBuffer());
+}
+
+export async function renderWig(yc: YouCam, photo: Uint8Array, refUrl: string, sessionId: string) {
+  const res = await fetch(refUrl);
+  if (!res.ok) throw new Error(`Couldn't load the product photo (${res.status}).`);
+  const ref = await yc.upload(await asJpeg1024(new Uint8Array(await res.arrayBuffer())), "image/jpeg", "ref.jpg");
+  return imageTask(yc, await asJpeg1024(photo), "hairTransfer", { ref_file_id: ref.fileId, hair_color: "ref" }, sessionId);
+}
 
 export const renderHat = (yc: YouCam, photo: Uint8Array, refUrl: string, gender: "female" | "male", sessionId: string) =>
   imageTask(yc, photo, "hat", { ref_file_url: refUrl, gender }, sessionId);
