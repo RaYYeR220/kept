@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import { describe, expect, it } from "vitest";
 import { createYouCam, Ledger, scriptedTransport } from "@kept/youcam";
+import { deltaE00, hexToLab } from "@kept/likeness";
 import { captureLikeness, type CaptureEvent } from "../lib/server/capture";
 
 const PUT = "https://yce-us.s3-accelerate.amazonaws.com/up";
@@ -47,7 +48,11 @@ const opts = {
   now: () => "2026-10-31T09:01:00Z",
   newId: () => "lk1",
 };
-const jpeg = new Uint8Array(await sharp({ create: { width: 400, height: 400, channels: 3, background: "#c99d7f" } }).jpeg().toBuffer());
+// Skin-coloured frame with a band of dark-brown "hair" across the top, where the sampler looks.
+const hairBand = await sharp({ create: { width: 400, height: 80, channels: 3, background: "#3a2418" } }).png().toBuffer();
+const jpeg = new Uint8Array(
+  await sharp({ create: { width: 400, height: 400, channels: 3, background: "#c99d7f" } }).composite([{ input: hairBand, top: 0, left: 0 }]).jpeg({ quality: 95 }).toBuffer(),
+);
 const photos = { front: jpeg, right: new Uint8Array([2]), left: new Uint8Array([3]), top: new Uint8Array([4]) };
 
 async function collect(gen: AsyncGenerator<CaptureEvent>) {
@@ -66,7 +71,10 @@ describe("captureLikeness", () => {
     if (done?.type !== "done") return;
     const l = done.likeness;
     expect(l.status).toBe("complete");
-    expect(l.hair.color?.value).toEqual({ hex: "#42280e", name: "Brown" });
+    expect(l.hair.color?.prov.api).toBe("kept-hair-sampler");
+    expect(l.hair.color?.prov.units).toBe(0);
+    expect(deltaE00(hexToLab(l.hair.color!.value.hex), hexToLab("#3a2418"))).toBeLessThan(3);
+    expect(l.hair.color?.value.name).toBe("Dark brown");
     expect(l.hair.type?.value.term).toBe("Slight to Medium Wavy");
     expect(l.brows.shape?.value).toEqual({ shape: "Soft Angled", thickness: "Average" });
     expect(l.brows.color?.prov).toMatchObject({ api: "skin-tone-analysis", taskId: "t-tone", units: 20, source: "replay" });

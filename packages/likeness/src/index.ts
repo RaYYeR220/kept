@@ -6,6 +6,7 @@ export * from "./lint.ts";
 export * from "./provenance.ts";
 export * from "./rank.ts";
 export * from "./rules.ts";
+export * from "./sample.ts";
 export * from "./schema.ts";
 export * from "./scope.ts";
 export * from "./share.ts";

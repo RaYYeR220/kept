@@ -169,6 +169,9 @@ importers:
       '@kept/youcam':
         specifier: workspace:^
         version: link:../../packages/youcam
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
       sharp:
         specifier: ^0.35.5
         version: 0.35.5(@types/node@24.19.2)

@@ -24,3 +24,11 @@ export function labToHex(lab: Lab): string {
 export function deltaE00(x: Lab, y: Lab): number {
   return de2000({ mode: "lab65", ...x }, { mode: "lab65", ...y });
 }
+
+const toLabFromRgb = converter("lab65");
+
+/** 8-bit sRGB → CIELAB (D65). */
+export function rgbToLab(r: number, g: number, b: number): Lab {
+  const c = toLabFromRgb({ mode: "rgb", r: r / 255, g: g / 255, b: b / 255 });
+  return { l: c.l, a: c.a, b: c.b };
+}

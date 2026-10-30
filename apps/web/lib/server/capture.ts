@@ -15,6 +15,7 @@ import {
 } from "@kept/youcam";
 import { isComplete, type Likeness, type Provenance } from "@kept/likeness";
 import { cropToFace } from "./crop";
+import { sampleHairFromBox } from "./sample";
 
 /** front: head and shoulders · right/left: three-quarter turns · top: looking down at the parting. */
 export type CapturePhotos = { front: Uint8Array; right?: Uint8Array; left?: Uint8Array; top?: Uint8Array };
@@ -73,6 +74,10 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
   } else {
     ids.face = (await yc.upload(await cropToFace(photos.front, box), "image/jpeg", "face.jpg")).fileId;
   }
+  // YouCam's hair-colour attribute is a six-family classifier; for matching wigs Kept reads
+  // the shade itself from the band of hair above the face YouCam found.
+  const hairSample = box ? await sampleHairFromBox(photos.front, box) : null;
+  const hairSampleAt = now();
   if (photos.top) ids.top = (await yc.upload(photos.top, "image/jpeg", "top.jpg")).fileId;
   if (photos.right && photos.left) {
     ids.right = (await yc.upload(photos.right, "image/jpeg", "right.jpg")).fileId;
@@ -142,8 +147,6 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
   const tone = results.has("skinTone") ? parseSkinTone(results.get("skinTone")!.results) : null;
   const face = results.has("faceAttr") ? parseFaceAttr(results.get("faceAttr")!.results) : null;
 
-  const hairHex = tone?.hair ?? face?.hair ?? null;
-  const hairFrom: StepKey = tone?.hair ? "skinTone" : "faceAttr";
   const browHex = tone?.brows ?? face?.brows ?? null;
   const browFrom: StepKey = tone?.brows ? "skinTone" : "faceAttr";
 
@@ -152,7 +155,9 @@ export async function* captureLikeness(yc: YouCam, photos: CapturePhotos, opts: 
     createdAt: now(),
     consent: { at: opts.consentAt, textVersion: opts.consentVersion },
     hair: {
-      color: m(hairFrom, hairHex ? { hex: hairHex, name: (hairFrom === "skinTone" ? tone?.hairName : face?.hairName) ?? null } : null),
+      color: hairSample
+        ? { value: { hex: hairSample.hex, name: hairSample.name }, prov: { api: "kept-hair-sampler", version: "1.0", taskId: pre.taskId, units: 0, at: hairSampleAt, source: opts.source } }
+        : null,
       type: m("hairType", results.has("hairType") ? parseHairType(results.get("hairType")!.results) : null),
       length: m("hairLength", results.has("hairLength") ? parseHairLength(results.get("hairLength")!.results) : null),
       density: m("hairDensity", results.has("hairDensity") ? parseHairDensity(results.get("hairDensity")!.results) : null),

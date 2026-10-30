@@ -29,7 +29,7 @@ export default function LikenessPage() {
           <div className="flex items-center gap-3.5 pb-3">
             <Swatch hex={l.hair.color.value.hex} kind="hair" />
             <div>
-              <div className="font-display text-[22px] font-medium leading-tight tracking-[-0.025em]">{l.hair.color.value.name ?? "Hair colour"} family</div>
+              <div className="font-display text-[22px] font-medium leading-tight tracking-[-0.025em]">{l.hair.color.value.name ?? "Hair colour"}</div>
               <div className="mt-1.5 flex flex-wrap items-center gap-2 text-[14px] font-medium tabular-nums text-[var(--ink-2)]">
                 {l.hair.color.value.hex.toUpperCase()} <ProvChip prov={l.hair.color.prov} />
               </div>

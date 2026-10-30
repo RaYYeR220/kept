@@ -12,6 +12,7 @@ const API_NAMES: Record<string, string> = {
   "makeup-vto": "YouCam Makeup VTO",
   "hair-transfer": "YouCam Hairstyle",
   hat: "YouCam Hat VTO",
+  "kept-hair-sampler": "Sampled by Kept · face by YouCam",
 };
 
 export const apiName = (api: string) => API_NAMES[api] ?? `YouCam ${api}`;
